@@ -87,7 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     scan_scroll.add_argument("--scale", type=int, default=4)
     scan_scroll.add_argument("--idle-timeout", type=float, default=12.0)
     scan_scroll.add_argument("--poll-interval", type=float, default=0.25)
-    scan_scroll.add_argument("--debounce", type=float, default=0.6)
+    scan_scroll.add_argument("--debounce", type=float, default=0.2)
     scan_scroll.add_argument("--change-threshold", type=float, default=0.02)
     scan_scroll.add_argument("--countdown", type=int, default=3)
     scan_scroll.add_argument(

@@ -5,6 +5,8 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from queue import Queue
+from threading import Thread
 from typing import Any, Callable
 
 from PIL import Image
@@ -39,7 +41,9 @@ from bdo_barter_assistant.capture.windows import (
 class ScrollScanConfig:
     idle_timeout: float = 12.0
     poll_interval: float = 0.25
-    debounce: float = 0.6
+    # The game list can be paged quickly; one stable poll is enough to queue
+    # a viewport while the OCR worker processes it independently.
+    debounce: float = 0.2
     change_threshold: float = 0.02
 
     def __post_init__(self) -> None:
@@ -82,9 +86,44 @@ def collect_scroll_session(
     captured_frames = 0
     duplicate_skips = 0
     ocr_frames = 0
+    queued_viewports = 0
     ocr_total = 0.0
     change_events = 0
     stop_reason = "idle_timeout"
+    ocr_jobs: Queue[tuple[int, Image.Image] | None] = Queue()
+    ocr_errors: list[BaseException] = []
+
+    def ocr_worker() -> None:
+        nonlocal ocr_frames, ocr_total, collected_rows
+        while True:
+            job = ocr_jobs.get()
+            try:
+                if job is None:
+                    return
+                viewport_index, viewport_image = job
+                result = scan_viewport(viewport_image)
+                ocr_frames += 1
+                timings = result.get("timing_seconds", {})
+                ocr_total += float(timings.get("ocr", timings.get("total", 0.0)))
+                collected_rows = merge_viewport_rows(
+                    collected_rows,
+                    list(result.get("rows", [])),
+                    viewport_index=viewport_index,
+                )
+                if debug_dir is not None:
+                    debug_dir.mkdir(parents=True, exist_ok=True)
+                    viewport_image.save(debug_dir / f"viewport_{viewport_index:03d}.png")
+                    (debug_dir / f"viewport_{viewport_index:03d}.json").write_text(
+                        json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8",
+                    )
+            except BaseException as error:  # propagate after the capture loop drains
+                ocr_errors.append(error)
+            finally:
+                ocr_jobs.task_done()
+
+    worker = Thread(target=ocr_worker, name="bdo-ocr-worker", daemon=True)
+    worker.start()
 
     try:
         while True:
@@ -124,24 +163,9 @@ def collect_scroll_session(
                 if seen_before:
                     duplicate_skips += 1
                 else:
-                    result = scan_viewport(candidate_image)
-                    viewport_index = ocr_frames
-                    ocr_frames += 1
-                    timings = result.get("timing_seconds", {})
-                    ocr_total += float(timings.get("ocr", timings.get("total", 0.0)))
-                    collected_rows = merge_viewport_rows(
-                        collected_rows,
-                        list(result.get("rows", [])),
-                        viewport_index=viewport_index,
-                    )
                     processed_fingerprints.append(candidate_fingerprint.copy())
-                    if debug_dir is not None:
-                        debug_dir.mkdir(parents=True, exist_ok=True)
-                        candidate_image.save(debug_dir / f"viewport_{viewport_index:03d}.png")
-                        (debug_dir / f"viewport_{viewport_index:03d}.json").write_text(
-                            json.dumps(result, ensure_ascii=False, indent=2) + "\n",
-                            encoding="utf-8",
-                        )
+                    ocr_jobs.put((queued_viewports, candidate_image.copy()))
+                    queued_viewports += 1
                 candidate_processed = True
 
             now = clock()
@@ -150,6 +174,13 @@ def collect_scroll_session(
             sleeper(config.poll_interval)
     except KeyboardInterrupt:
         stop_reason = "user_interrupt"
+    finally:
+        ocr_jobs.put(None)
+        ocr_jobs.join()
+        worker.join()
+
+    if ocr_errors:
+        raise RuntimeError("OCR worker failed") from ocr_errors[0]
 
     ended = clock()
     rows = finalize_collected_rows(collected_rows)
@@ -161,6 +192,7 @@ def collect_scroll_session(
             "stop_reason": stop_reason,
             "captured_frames": captured_frames,
             "ocr_frames": ocr_frames,
+            "queued_viewports": queued_viewports,
             "duplicate_viewports_skipped": duplicate_skips,
             "change_events": change_events,
             "duration_sec": round(ended - started, 4),
