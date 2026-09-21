@@ -64,11 +64,35 @@ def scan_barter_image(
 ) -> dict[str, Any]:
     """Run the M1 fixed-sample pipeline and return normalized rows plus timings."""
     started = time.perf_counter()
+    with Image.open(image_path) as source:
+        frame = source.convert("RGB")
+    return scan_barter_frame(
+        frame,
+        source_label=str(image_path),
+        region=region,
+        dictionary=dictionary,
+        ocr_adapter=ocr_adapter,
+        scale=scale,
+        _started_at=started,
+    )
+
+
+def scan_barter_frame(
+    frame: Image.Image,
+    *,
+    source_label: str = "memory",
+    region: Region | None = None,
+    dictionary: OcrDictionary | None = None,
+    ocr_adapter: WindowsOcrAdapter | None = None,
+    scale: int = 4,
+    _started_at: float | None = None,
+) -> dict[str, Any]:
+    """Run the unchanged M1 OCR stages on an in-memory image frame."""
+    started = _started_at if _started_at is not None else time.perf_counter()
     dictionary = dictionary or load_ocr_dictionary()
     ocr_adapter = ocr_adapter or WindowsOcrAdapter()
 
-    with Image.open(image_path) as source:
-        barter_area = crop_region(source.convert("RGB"), region)
+    barter_area = crop_region(frame.convert("RGB"), region)
     rows = segment_complete_rows(barter_area)
     segmented_at = time.perf_counter()
 
@@ -142,7 +166,7 @@ def scan_barter_image(
     return {
         "engine": "Windows.Media.Ocr/OcrEngine (ko)",
         "preprocessing": f"fixed field crop + {scale}x bicubic upscale",
-        "source_image": str(image_path),
+        "source_image": source_label,
         "manual_region": (
             [region.x, region.y, region.width, region.height] if region else None
         ),
@@ -159,4 +183,3 @@ def scan_barter_image(
         },
         "network_requests": 0,
     }
-

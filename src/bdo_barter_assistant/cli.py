@@ -7,7 +7,14 @@ from pathlib import Path
 from typing import Any
 
 from bdo_barter_assistant.barter.pipeline import scan_barter_image
+from bdo_barter_assistant.barter.window_scan import scan_window
 from bdo_barter_assistant.capture.region import Region
+from bdo_barter_assistant.capture.windows import (
+    WindowCaptureError,
+    WindowSelectionError,
+    enumerate_top_level_windows,
+    filter_windows,
+)
 from bdo_barter_assistant.evaluation import evaluate_golden
 from bdo_barter_assistant.reference_extract import write_reference_dictionary
 
@@ -27,8 +34,12 @@ def _region(value: str | None) -> Region | None:
     return Region.parse(value) if value else None
 
 
+def _hwnd(value: str) -> int:
+    return int(value, 0)
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="BDO barter OCR M1 proof of concept")
+    parser = argparse.ArgumentParser(description="BDO barter local OCR and window capture")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     extract = subparsers.add_parser("extract-reference")
@@ -48,6 +59,23 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--scale", type=int, default=4)
     evaluate.add_argument("--repeat", type=int, default=1)
     evaluate.add_argument("--output", type=Path)
+
+    windows = subparsers.add_parser("windows")
+    windows.add_argument("--title", help="case-insensitive title substring")
+    windows.add_argument("--process", help="case-insensitive executable substring")
+    windows.add_argument("--game-only", action="store_true")
+    windows.add_argument("--output", type=Path)
+
+    scan_window_parser = subparsers.add_parser("scan-window")
+    scan_window_parser.add_argument("--hwnd", type=_hwnd, help="decimal or 0x-prefixed handle")
+    scan_window_parser.add_argument("--title", help="case-insensitive title substring")
+    scan_window_parser.add_argument("--process", help="case-insensitive executable substring")
+    scan_window_parser.add_argument("--region", help="client-relative x,y,width,height")
+    scan_window_parser.add_argument("--calibration", type=Path)
+    scan_window_parser.add_argument("--save-calibration", action="store_true")
+    scan_window_parser.add_argument("--debug-capture", type=Path)
+    scan_window_parser.add_argument("--scale", type=int, default=4)
+    scan_window_parser.add_argument("--output", type=Path)
     return parser
 
 
@@ -72,5 +100,43 @@ def main(argv: list[str] | None = None) -> int:
         )
         _write_json(result, args.output)
         return 0
+    if args.command == "windows":
+        try:
+            found = filter_windows(
+                enumerate_top_level_windows(),
+                title=args.title,
+                process=args.process,
+                game_only=args.game_only,
+            )
+        except WindowCaptureError as error:
+            _write_json({"error": str(error)}, None)
+            return 2
+        _write_json([window.to_dict() for window in found], args.output)
+        return 0
+    if args.command == "scan-window":
+        try:
+            result = scan_window(
+                hwnd=args.hwnd,
+                title=args.title,
+                process=args.process,
+                region=_region(args.region),
+                calibration_path=args.calibration,
+                save_region=args.save_calibration,
+                debug_capture=args.debug_capture,
+                scale=args.scale,
+            )
+        except WindowSelectionError as error:
+            _write_json(
+                {
+                    "error": str(error),
+                    "candidates": [item.to_dict() for item in error.candidates],
+                },
+                None,
+            )
+            return 2
+        except (WindowCaptureError, ValueError) as error:
+            _write_json({"error": str(error)}, None)
+            return 2
+        _write_json(result, args.output)
+        return 0
     raise AssertionError(f"unknown command: {args.command}")
-

@@ -32,10 +32,17 @@
 
 ## M2 — Window Capture
 
-- Windows 10에서 게임 창 또는 사용자 지정 영역 캡처
-- 최초 설정과 좌표 재설정
-- 해상도/UI 배율 변화에 대한 실패 안내
-- 일반 모드 메모리 캡처, 디버그 저장 opt-in
+상태: **완료 / PASS (2026-09-22)**
+
+- [x] Windows top-level 창 열거와 제목·프로세스·HWND 선택
+- [x] DPI-aware client rect 계산과 desktop 기반 메모리 캡처
+- [x] window-relative ROI 및 1회 calibration 저장
+- [x] 기존 M1 OCR pipeline과 normalized JSON 연결
+- [x] 일반 모드 파일 미저장, 디버그 캡처 opt-in
+- [x] M1 회귀 포함 자동 테스트 14개 통과
+- [x] 실제 실행 중인 검은사막 창에서 `scan-window` 검증
+
+실제 `BlackDesert64.exe` 창의 1920×1080 client area를 DPI 96에서 메모리 캡처해 기존 OCR pipeline으로 6행을 출력했다. 디버그 이미지는 저장하지 않았고 네트워크 요청은 0회였다.
 
 ## M3 — Scroll Collection
 

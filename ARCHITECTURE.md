@@ -28,8 +28,9 @@ Storage
 
 ### `capture`
 
-- 게임 창/사용자 지정 영역에서 프레임 획득
-- 화면 변경 감지용 프레임 메타데이터 제공
+- Win32 top-level window를 열거하고 제목·프로세스·HWND로 대상 선택
+- DPI-aware screen 좌표로 변환한 client area를 데스크톱에서 메모리 캡처
+- client-relative 물물교환 ROI와 window/client rect, DPI, 캡처 크기 메타데이터 제공
 - 일반 모드에서 캡처 파일을 영구 저장하지 않음
 - OCR, 품목명, 스케줄 규칙을 알지 못함
 
@@ -135,7 +136,10 @@ M5에서는 새 알고리즘을 먼저 설계하지 않는다.
 - 완료 충돌: 사용자가 최신 재고와 delta를 다시 확인
 - 원본 데이터 누락: 추측하지 않고 `future_information_input` 또는 미지원으로 표시
 
-## 7. 현재 M0 산출물
+## 7. 현재 구현 범위
 
-M0에는 모듈 디렉터리만 존재한다. import 가능한 패키지, 실행 진입점, 데이터 변환 결과, 테스트 코드는 만들지 않는다.
-
+- M1: 저장 이미지 또는 메모리 프레임을 같은 OCR 파이프라인으로 정규화한다.
+- M2: 화면에 보이는 Windows client area를 `ctypes`와 Pillow `ImageGrab`으로 캡처한다.
+- 기본 ROI는 검증된 1920×1080 M1 영역을 client 크기에 정규화해 적용하며, 명시적 ROI를 1회 저장해 대체할 수 있다.
+- 최소화되었거나 완전히 가려진 창의 우회 캡처, 입력 자동화, 스크롤 수집은 지원하지 않는다.
+- M2는 실제 `BlackDesert64.exe` HWND에서 1920×1080 client area 캡처와 기존 OCR pipeline 연결을 검증했다.
