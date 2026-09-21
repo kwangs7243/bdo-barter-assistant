@@ -1,0 +1,32 @@
+[project]
+name = "bdo-barter-assistant"
+version = "0.1.0"
+description = "Local Windows assistant for Black Desert Online barter planning"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "pillow>=11.3,<12",
+    "rapidfuzz>=3.14,<4",
+]
+
+[project.scripts]
+bdo-barter-ocr = "bdo_barter_assistant.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<9",
+]
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bdo_barter_assistant"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--basetemp=.pytest-tmp"

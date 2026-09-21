@@ -1,0 +1,50 @@
+[
+  {
+    "island": "일리야 섬",
+    "remaining_count": 5,
+    "from_item": "황금빛 선인장 꽃다발",
+    "req_amount": 1,
+    "to_item": "발레노스 고래 조각상",
+    "yield_amount": 1
+  },
+  {
+    "island": "오스트라 섬",
+    "remaining_count": 10,
+    "from_item": "오색 구슬",
+    "req_amount": 1,
+    "to_item": "걸쭉한 괴생물 혈액",
+    "yield_amount": 2
+  },
+  {
+    "island": "아지르 섬",
+    "remaining_count": 0,
+    "from_item": "해상 기사단의 투구",
+    "req_amount": 1,
+    "to_item": "조각상의 눈물",
+    "yield_amount": 1
+  },
+  {
+    "island": "칸베라 섬",
+    "remaining_count": 10,
+    "from_item": "섬마을 도시락",
+    "req_amount": 1,
+    "to_item": "종유석 파편",
+    "yield_amount": 2
+  },
+  {
+    "island": "아라킬 섬",
+    "remaining_count": 10,
+    "from_item": "크론성 금주화",
+    "req_amount": 1,
+    "to_item": "해골 장식 찻잔",
+    "yield_amount": 2
+  },
+  {
+    "island": "타라무라 섬",
+    "remaining_count": 10,
+    "from_item": "해적선 돛대",
+    "req_amount": 1,
+    "to_item": "반달 조리용 칼",
+    "yield_amount": 3
+  }
+]

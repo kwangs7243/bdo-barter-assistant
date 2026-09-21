@@ -1,0 +1,928 @@
+{
+  "engine": "Windows.Media.Ocr/OcrEngine (ko)",
+  "preprocessing": "fixed field crop + 4x bicubic upscale",
+  "golden_rows": 6,
+  "detected_rows": 6,
+  "exact": {
+    "island": 6,
+    "remaining_count": 6,
+    "from_item": 6,
+    "req_amount": 6,
+    "to_item": 6,
+    "yield_amount": 6
+  },
+  "review_required_rows": 0,
+  "wrong_auto_confirmed_count": 0,
+  "wrong_auto_confirmed": [],
+  "timing_seconds": {
+    "runs": 5,
+    "sum_total": 9.1094,
+    "average_total": 1.8219,
+    "min_total": 1.7046,
+    "max_total": 2.0741,
+    "last_total": 1.7046
+  },
+  "network_requests": 0,
+  "rows": [
+    {
+      "barter_row_id": "barter_sample_1",
+      "row_index": 0,
+      "bounding_box": [
+        0,
+        3,
+        987,
+        73
+      ],
+      "island": {
+        "raw": "일리야성 \\7",
+        "value": "일리야 섬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.1765,
+        "auto_confirmed": true
+      },
+      "remaining_count": 5,
+      "from_item": {
+        "raw": "[6단계] 황금빛 선인장 꽃다발",
+        "value": "황금빛 선인장 꽃다발",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.3333,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[7단계] 발레노스 고래 조각상",
+        "value": "발레노스 고래 조각상",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.3659,
+        "auto_confirmed": true
+      },
+      "yield_amount": 1,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 1.0,
+        "from_item": 1.0,
+        "to_item": 1.0
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "일리야 섬",
+            "source_value": "일리야",
+            "confidence": 1.0
+          },
+          {
+            "value": "일리야",
+            "source_value": "일리야",
+            "confidence": 0.8235
+          },
+          {
+            "value": "오리샤 섬",
+            "source_value": "오리샤 섬",
+            "confidence": 0.7368
+          }
+        ],
+        "from_item": [
+          {
+            "value": "황금빛 선인장 꽃다발",
+            "source_value": "황금빛 선인장 꽃다발",
+            "confidence": 1.0
+          },
+          {
+            "value": "검은 장미 꽃다발",
+            "source_value": "검은 장미 꽃다발",
+            "confidence": 0.6667
+          },
+          {
+            "value": "황금빛 모래",
+            "source_value": "황금빛 모래",
+            "confidence": 0.5128
+          }
+        ],
+        "to_item": [
+          {
+            "value": "발레노스 고래 조각상",
+            "source_value": "발레노스 고래 조각상",
+            "confidence": 1.0
+          },
+          {
+            "value": "발레노스 무지개 산호",
+            "source_value": "발레노스 무지개 산호",
+            "confidence": 0.6341
+          },
+          {
+            "value": "발레노스 전통 닻 장식",
+            "source_value": "발레노스 전통 닻 장식",
+            "confidence": 0.6222
+          }
+        ]
+      },
+      "raw": {
+        "island": "일리야성 \\7",
+        "remaining_count": "남은 교환 횟수: 5회",
+        "from_item": "[6단계] 황금빛 선인장 꽃다발",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[7단계] 발레노스 고래 조각상",
+        "yield_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    },
+    {
+      "barter_row_id": "barter_sample_2",
+      "row_index": 1,
+      "bounding_box": [
+        0,
+        78,
+        987,
+        148
+      ],
+      "island": {
+        "raw": "오스트라 성 \\7",
+        "value": "오스트라 섬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.3,
+        "auto_confirmed": true
+      },
+      "remaining_count": 10,
+      "from_item": {
+        "raw": "[2단계] 오색 구슬",
+        "value": "오색 구슬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.44,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[3단계] 길쭉한 괴생물 혈액",
+        "value": "걸쭉한 괴생물 혈액",
+        "reference_id": null,
+        "match_confidence": 0.9565,
+        "match_margin": 0.4565,
+        "auto_confirmed": true
+      },
+      "yield_amount": 2,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 1.0,
+        "from_item": 1.0,
+        "to_item": 0.9565
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "오스트라 섬",
+            "source_value": "오스트라 섬",
+            "confidence": 1.0
+          },
+          {
+            "value": "에스파 섬",
+            "source_value": "에스파 섬",
+            "confidence": 0.7
+          },
+          {
+            "value": "스타렌 섬",
+            "source_value": "스타렌 섬",
+            "confidence": 0.6667
+          }
+        ],
+        "from_item": [
+          {
+            "value": "오색 구슬",
+            "source_value": "오색 구슬",
+            "confidence": 1.0
+          },
+          {
+            "value": "오색빛 실타래",
+            "source_value": "오색빛 실타래",
+            "confidence": 0.56
+          },
+          {
+            "value": "롬타스 그물",
+            "source_value": "롬타스 그물",
+            "confidence": 0.4545
+          }
+        ],
+        "to_item": [
+          {
+            "value": "걸쭉한 괴생물 혈액",
+            "source_value": "걸쭉한 괴생물 혈액",
+            "confidence": 0.9565
+          },
+          {
+            "value": "괴생물 촉수",
+            "source_value": "괴생물 촉수",
+            "confidence": 0.5
+          },
+          {
+            "value": "거대한 물고기 뼈",
+            "source_value": "거대한 물고기 뼈",
+            "confidence": 0.4103
+          }
+        ]
+      },
+      "raw": {
+        "island": "오스트라 성 \\7",
+        "remaining_count": "남은 교환 횟수: 10회",
+        "from_item": "[2단계] 오색 구슬",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            2,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[3단계] 길쭉한 괴생물 혈액",
+        "yield_amount": {
+          "value": 2,
+          "confidence": 0.96,
+          "signature": [
+            0,
+            4,
+            3,
+            1,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            6,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    },
+    {
+      "barter_row_id": "barter_sample_3",
+      "row_index": 2,
+      "bounding_box": [
+        0,
+        153,
+        987,
+        223
+      ],
+      "island": {
+        "raw": "아지르성 \\7",
+        "value": "아지르 섬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.2941,
+        "auto_confirmed": true
+      },
+      "remaining_count": 0,
+      "from_item": {
+        "raw": "[4단계] 해상 기사단의 투구",
+        "value": "해상 기사단의 투구",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.2,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[5단계] 조각상의 눈물",
+        "value": "조각상의 눈물",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.5429,
+        "auto_confirmed": true
+      },
+      "yield_amount": 1,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 1.0,
+        "from_item": 1.0,
+        "to_item": 1.0
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "아지르 섬",
+            "source_value": "아지르 섬",
+            "confidence": 1.0
+          },
+          {
+            "value": "앙쥬 섬",
+            "source_value": "앙쥬 섬",
+            "confidence": 0.7059
+          },
+          {
+            "value": "나르보 섬",
+            "source_value": "나르보 섬",
+            "confidence": 0.6667
+          }
+        ],
+        "from_item": [
+          {
+            "value": "해상 기사단의 투구",
+            "source_value": "해상 기사단의 투구",
+            "confidence": 1.0
+          },
+          {
+            "value": "해상 기사단의 창",
+            "source_value": "해상 기사단의 창",
+            "confidence": 0.8
+          },
+          {
+            "value": "칼페온 기사단의 전투 교본",
+            "source_value": "칼페온 기사단의 전투 교본",
+            "confidence": 0.5778
+          }
+        ],
+        "to_item": [
+          {
+            "value": "조각상의 눈물",
+            "source_value": "조각상의 눈물",
+            "confidence": 1.0
+          },
+          {
+            "value": "카마실비아 조각상",
+            "source_value": "카마실비아 조각상",
+            "confidence": 0.4571
+          },
+          {
+            "value": "때 탄 갈매기 조각상",
+            "source_value": "때 탄 갈매기 조각상",
+            "confidence": 0.4444
+          }
+        ]
+      },
+      "raw": {
+        "island": "아지르성 \\7",
+        "remaining_count": "남은 교환 횟수: 0회",
+        "from_item": "[4단계] 해상 기사단의 투구",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[5단계] 조각상의 눈물",
+        "yield_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    },
+    {
+      "barter_row_id": "barter_sample_4",
+      "row_index": 3,
+      "bounding_box": [
+        0,
+        228,
+        987,
+        298
+      ],
+      "island": {
+        "raw": "간베라성 \\7",
+        "value": "칸베라 섬",
+        "reference_id": null,
+        "match_confidence": 0.9,
+        "match_margin": 0.1,
+        "auto_confirmed": true
+      },
+      "remaining_count": 10,
+      "from_item": {
+        "raw": "[2단계] 섬마을 도시락",
+        "value": "섬마을 도시락",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.5429,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[3단계] 종유석 파편",
+        "value": "종유석 파편",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.36,
+        "auto_confirmed": true
+      },
+      "yield_amount": 2,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 0.9,
+        "from_item": 1.0,
+        "to_item": 1.0
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "칸베라 섬",
+            "source_value": "칸베라 섬",
+            "confidence": 0.9
+          },
+          {
+            "value": "틴베라 섬",
+            "source_value": "틴베라 섬",
+            "confidence": 0.8
+          },
+          {
+            "value": "그란디하 섬",
+            "source_value": "그란디하",
+            "confidence": 0.6364
+          }
+        ],
+        "from_item": [
+          {
+            "value": "섬마을 도시락",
+            "source_value": "섬마을 도시락",
+            "confidence": 1.0
+          },
+          {
+            "value": "젊음을 담은 비약",
+            "source_value": "젊음을 담은 비약",
+            "confidence": 0.4571
+          },
+          {
+            "value": "성게 가시",
+            "source_value": "성게 가시",
+            "confidence": 0.4167
+          }
+        ],
+        "to_item": [
+          {
+            "value": "종유석 파편",
+            "source_value": "종유석 파편",
+            "confidence": 1.0
+          },
+          {
+            "value": "자수정 파편",
+            "source_value": "자수정 파편",
+            "confidence": 0.64
+          },
+          {
+            "value": "고대 항아리 파편",
+            "source_value": "고대 항아리 파편",
+            "confidence": 0.5517
+          }
+        ]
+      },
+      "raw": {
+        "island": "간베라성 \\7",
+        "remaining_count": "남은 교환 횟수: 10회",
+        "from_item": "[2단계] 섬마을 도시락",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[3단계] 종유석 파편",
+        "yield_amount": {
+          "value": 2,
+          "confidence": 0.96,
+          "signature": [
+            0,
+            4,
+            3,
+            1,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            6,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    },
+    {
+      "barter_row_id": "barter_sample_5",
+      "row_index": 4,
+      "bounding_box": [
+        0,
+        303,
+        987,
+        373
+      ],
+      "island": {
+        "raw": "아라킬성 \\7",
+        "value": "아라킬 섬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.2632,
+        "auto_confirmed": true
+      },
+      "remaining_count": 10,
+      "from_item": {
+        "raw": "[2단계] 크론성 금주와",
+        "value": "크론성 금주화",
+        "reference_id": null,
+        "match_confidence": 0.9333,
+        "match_margin": 0.4148,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[3단계] 해골 장식",
+        "value": "해골 장식 찻잔",
+        "reference_id": null,
+        "match_confidence": 0.7857,
+        "match_margin": 0.1931,
+        "auto_confirmed": true
+      },
+      "yield_amount": 2,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 1.0,
+        "from_item": 0.9333,
+        "to_item": 0.7857
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "아라킬 섬",
+            "source_value": "아라킬 섬",
+            "confidence": 1.0
+          },
+          {
+            "value": "아리타 섬",
+            "source_value": "아리타 섬",
+            "confidence": 0.7368
+          },
+          {
+            "value": "알마이 섬",
+            "source_value": "알마이 섬",
+            "confidence": 0.7
+          }
+        ],
+        "from_item": [
+          {
+            "value": "크론성 금주화",
+            "source_value": "크론성 금주화",
+            "confidence": 0.9333
+          },
+          {
+            "value": "해적 금주화",
+            "source_value": "해적 금주화",
+            "confidence": 0.5185
+          },
+          {
+            "value": "롬타스 그물",
+            "source_value": "롬타스 그물",
+            "confidence": 0.4444
+          }
+        ],
+        "to_item": [
+          {
+            "value": "해골 장식 찻잔",
+            "source_value": "해골 장식 찻잔",
+            "confidence": 0.7857
+          },
+          {
+            "value": "조개 껍질 장식",
+            "source_value": "조개 껍질 장식",
+            "confidence": 0.5926
+          },
+          {
+            "value": "소라게 껍질 장식",
+            "source_value": "소라게 껍질 장식",
+            "confidence": 0.5517
+          }
+        ]
+      },
+      "raw": {
+        "island": "아라킬성 \\7",
+        "remaining_count": "남은 교환 횟수: 10회",
+        "from_item": "[2단계] 크론성 금주와",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            2,
+            3,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[3단계] 해골 장식",
+        "yield_amount": {
+          "value": 2,
+          "confidence": 0.96,
+          "signature": [
+            0,
+            4,
+            4,
+            1,
+            2,
+            3,
+            3,
+            2,
+            1,
+            1,
+            6,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    },
+    {
+      "barter_row_id": "barter_sample_6",
+      "row_index": 5,
+      "bounding_box": [
+        0,
+        378,
+        987,
+        448
+      ],
+      "island": {
+        "raw": "타라무라성 \\7",
+        "value": "타라무라 섬",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.2727,
+        "auto_confirmed": true
+      },
+      "remaining_count": 10,
+      "from_item": {
+        "raw": "[2단계] 해적선 돛대",
+        "value": "해적선 돛대",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.5,
+        "auto_confirmed": true
+      },
+      "req_amount": 1,
+      "to_item": {
+        "raw": "[3단계] 반달 조리용 칼",
+        "value": "반달 조리용 칼",
+        "reference_id": null,
+        "match_confidence": 1.0,
+        "match_margin": 0.5556,
+        "auto_confirmed": true
+      },
+      "yield_amount": 3,
+      "review_status": "auto_confirmed",
+      "review_required": false,
+      "confidence": {
+        "island": 1.0,
+        "from_item": 1.0,
+        "to_item": 1.0
+      },
+      "field_auto_confirmed": {
+        "island": true,
+        "remaining_count": true,
+        "from_item": true,
+        "req_amount": true,
+        "to_item": true,
+        "yield_amount": true
+      },
+      "alternatives": {
+        "island": [
+          {
+            "value": "타라무라 섬",
+            "source_value": "타라무라 섬",
+            "confidence": 1.0
+          },
+          {
+            "value": "파라타마 섬",
+            "source_value": "파라타마 섬",
+            "confidence": 0.7273
+          },
+          {
+            "value": "라메다 섬",
+            "source_value": "라메다 섬",
+            "confidence": 0.7
+          }
+        ],
+        "from_item": [
+          {
+            "value": "해적선 돛대",
+            "source_value": "해적선 돛대",
+            "confidence": 1.0
+          },
+          {
+            "value": "훔친 해적단 단도",
+            "source_value": "훔친 해적단 단도",
+            "confidence": 0.5
+          },
+          {
+            "value": "해적의 열쇠",
+            "source_value": "해적의 열쇠",
+            "confidence": 0.48
+          }
+        ],
+        "to_item": [
+          {
+            "value": "반달 조리용 칼",
+            "source_value": "반달 조리용 칼",
+            "confidence": 1.0
+          },
+          {
+            "value": "목 잘린 용 조각상",
+            "source_value": "목 잘린 용 조각상",
+            "confidence": 0.4444
+          },
+          {
+            "value": "발렌시아 모래 방패",
+            "source_value": "발렌시아 모래 방패",
+            "confidence": 0.4
+          }
+        ]
+      },
+      "raw": {
+        "island": "타라무라성 \\7",
+        "remaining_count": "남은 교환 횟수: 10회",
+        "from_item": "[2단계] 해적선 돛대",
+        "req_amount": {
+          "value": 1,
+          "confidence": 0.99,
+          "signature": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "to_item": "[3단계] 반달 조리용 칼",
+        "yield_amount": {
+          "value": 3,
+          "confidence": 0.94,
+          "signature": [
+            0,
+            4,
+            3,
+            1,
+            2,
+            3,
+            1,
+            1,
+            1,
+            2,
+            4,
+            0
+          ],
+          "method": "fixed_glyph_1_2_3"
+        },
+        "ocr_confidence": null
+      }
+    }
+  ]
+}

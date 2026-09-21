@@ -1,0 +1,7 @@
+.venv/
+.uv-cache/
+.pytest_cache/
+.pytest-tmp/
+__pycache__/
+*.py[cod]
+.tmp-ocr-probe/
