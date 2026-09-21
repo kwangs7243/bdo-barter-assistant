@@ -2,7 +2,23 @@
 
 ## 상태
 
-M3 코드와 자동 테스트는 완료했다. 실제 검은사막 목록을 처음부터 끝까지 수동 스크롤하는 검증 전 상태는 `CODE PASS / LIVE SCROLL TEST REQUIRED`다.
+M3 코드, 자동 테스트와 실제 검은사막 목록의 처음부터 끝까지 수동 스크롤 검증을 완료했다. 상태는 `PASS`다.
+
+실제 검증 결과:
+
+- 종료: `idle_timeout`
+- 총 시간: `52.75초`
+- 캡처 frame: `150`
+- 화면 변화 event: `70`
+- OCR viewport: `3`
+- 건너뛴 중복 viewport: `62`
+- 평균 OCR 시간: `1.4565초`
+- 최종 unique row: `15`
+- `review_required` row: `7`
+- 네트워크 요청: `0`
+- 디버그 이미지 저장: 없음
+
+7개 불확실 행은 값이 없는 필드를 억지로 확정하지 않았다. 세 live viewport의 행은 서로 겹치지 않아 실제 병합 provenance는 각 1개였고, 겹침 병합과 false merge 방지는 자동 테스트 결과를 근거로 한다.
 
 ## 실행 흐름
 
@@ -37,7 +53,7 @@ idle 종료를 기다리지 않고 PowerShell로 돌아와 `Ctrl+C`를 누르면
 
 M1 샘플을 세로로 합성 이동해 측정한 차이는 동일 화면 `0.0`, 2px `0.0092`, 5px `0.0218`, 10px `0.0396`, 30px `0.0672`, 75px `0.0481`이었다. 따라서 기본값은 미세한 2px 차이는 무시하고 5px 이상의 목록 이동은 감지한다. 실제 게임 전체 스크롤 결과에 따라 조정할 수 있도록 모든 시간과 임계값을 옵션으로 노출한다.
 
-현재 OCR은 한 viewport를 처리하는 동안 다음 캡처를 병렬 수행하지 않는다. 중간 viewport 누락을 피하려면 다음 화면으로 이동하기 전에 약 2.5초를 기다린다. 이 간격은 실제 live scroll 검증에서 조정한다.
+현재 OCR은 한 viewport를 처리하는 동안 다음 캡처를 병렬 수행하지 않는다. 중간 viewport 누락을 피하려면 다음 화면으로 이동하기 전에 약 2.5초를 기다린다. 첫 live run은 이 흐름으로 3개 viewport를 수집했다.
 
 ```powershell
 uv run --offline python -m bdo_barter_assistant scan-scroll `
@@ -86,4 +102,4 @@ uv run --offline python -m bdo_barter_assistant scan-scroll --debug
 - 마우스 자동 스크롤, 키보드·마우스 입력 전송, global hotkey를 구현하지 않는다.
 - 게임 메모리, 패킷, 파일이나 DLL에 접근하지 않는다.
 - M3는 사용자가 아래 방향으로 직접 스크롤하는 흐름을 대상으로 한다.
-- 실제 게임 live scroll 검증 전에는 M4를 시작하지 않는다.
+- M3 PASS 이후 M4를 진행할 수 있다.

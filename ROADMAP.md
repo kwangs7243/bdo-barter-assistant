@@ -46,7 +46,7 @@
 
 ## M3 — Scroll Collection
 
-상태: **CODE PASS / LIVE SCROLL TEST REQUIRED (2026-09-22)**
+상태: **완료 / PASS (2026-09-22)**
 
 - [x] ROI grayscale 차이 기반 viewport 변경 감지
 - [x] poll + debounce 후 변경 화면에만 OCR 실행
@@ -55,9 +55,9 @@
 - [x] countdown, 조정 가능한 idle timeout, `Ctrl+C` 종료
 - [x] 기본 메모리 처리와 명시적 `--debug` 저장
 - [x] M1/M2 회귀 포함 자동 테스트 24개 통과
-- [ ] 실제 게임에서 목록 처음부터 끝까지 수동 스크롤 검증
+- [x] 실제 게임에서 목록 처음부터 끝까지 수동 스크롤 검증
 
-실제 전체 목록의 unique row 수, review 수와 OCR 절감량을 확인하기 전에는 M3 전체 PASS로 전환하지 않으며 M4를 시작하지 않는다.
+실제 게임에서 52.75초 동안 150 frame을 캡처하고 안정된 3개 viewport만 OCR했다. 중복 viewport 62개를 건너뛰어 최종 15행을 순서대로 수집했으며 7행은 `review_required`로 보존했다. live viewport 사이에 공통 행은 없었으므로 실제 겹침 병합은 발생하지 않았고, 해당 동작은 자동 테스트로 검증했다.
 
 ## M4 — Local Inventory
 
