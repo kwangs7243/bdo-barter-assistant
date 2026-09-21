@@ -46,10 +46,18 @@
 
 ## M3 — Scroll Collection
 
-- 화면 변경 감지
-- 사용자가 스크롤한 여러 프레임의 행 수집
-- 중복 제거와 coverage 표시
-- 스캔 시작/종료 및 검수 목록
+상태: **CODE PASS / LIVE SCROLL TEST REQUIRED (2026-09-22)**
+
+- [x] ROI grayscale 차이 기반 viewport 변경 감지
+- [x] poll + debounce 후 변경 화면에만 OCR 실행
+- [x] 겹치는 행의 순서 보존 병합과 confidence 개선
+- [x] 충돌·불확실 행의 보수적 `review_required` 유지
+- [x] countdown, 조정 가능한 idle timeout, `Ctrl+C` 종료
+- [x] 기본 메모리 처리와 명시적 `--debug` 저장
+- [x] M1/M2 회귀 포함 자동 테스트 24개 통과
+- [ ] 실제 게임에서 목록 처음부터 끝까지 수동 스크롤 검증
+
+실제 전체 목록의 unique row 수, review 수와 OCR 절감량을 확인하기 전에는 M3 전체 PASS로 전환하지 않으며 M4를 시작하지 않는다.
 
 ## M4 — Local Inventory
 

@@ -33,6 +33,7 @@ Storage
 - client-relative 물물교환 ROI와 window/client rect, DPI, 캡처 크기 메타데이터 제공
 - 일반 모드에서 캡처 파일을 영구 저장하지 않음
 - OCR, 품목명, 스케줄 규칙을 알지 못함
+- 축소 grayscale ROI의 평균 픽셀 차이로 viewport 변경 여부만 판정
 
 ### `ocr`
 
@@ -51,7 +52,8 @@ Storage
 ### `barter`
 
 - 교환 행의 유효성 검사와 정규화
-- 스크롤 중복 제거
+- viewport의 suffix/prefix 공통 행을 이용한 스크롤 순서 보존과 중복 제거
+- 중복 관찰 중 더 신뢰도 높은 필드와 raw provenance 보존
 - 사용자 검수·수정 상태 관리
 - OCR 세부 구현과 스케줄 점수 계산을 알지 못함
 
@@ -143,3 +145,4 @@ M5에서는 새 알고리즘을 먼저 설계하지 않는다.
 - 기본 ROI는 검증된 1920×1080 M1 영역을 client 크기에 정규화해 적용하며, 명시적 ROI를 1회 저장해 대체할 수 있다.
 - 최소화되었거나 완전히 가려진 창의 우회 캡처, 입력 자동화, 스크롤 수집은 지원하지 않는다.
 - M2는 실제 `BlackDesert64.exe` HWND에서 1920×1080 client area 캡처와 기존 OCR pipeline 연결을 검증했다.
+- M3는 변경 후 안정된 viewport만 OCR하고 겹치는 행을 보수적으로 병합하는 `scan-scroll` CLI까지 구현했다. 실제 전체 목록 수동 스크롤 검증은 대기 중이다.

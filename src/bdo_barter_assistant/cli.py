@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from bdo_barter_assistant.barter.pipeline import scan_barter_image
+from bdo_barter_assistant.barter.scroll_scan import ScrollScanConfig, scan_scroll_window
 from bdo_barter_assistant.barter.window_scan import scan_window
 from bdo_barter_assistant.capture.region import Region
 from bdo_barter_assistant.capture.windows import (
@@ -76,6 +77,27 @@ def build_parser() -> argparse.ArgumentParser:
     scan_window_parser.add_argument("--debug-capture", type=Path)
     scan_window_parser.add_argument("--scale", type=int, default=4)
     scan_window_parser.add_argument("--output", type=Path)
+
+    scan_scroll = subparsers.add_parser("scan-scroll")
+    scan_scroll.add_argument("--hwnd", type=_hwnd, help="decimal or 0x-prefixed handle")
+    scan_scroll.add_argument("--title", help="case-insensitive title substring")
+    scan_scroll.add_argument("--process", help="case-insensitive executable substring")
+    scan_scroll.add_argument("--region", help="client-relative x,y,width,height")
+    scan_scroll.add_argument("--calibration", type=Path)
+    scan_scroll.add_argument("--scale", type=int, default=4)
+    scan_scroll.add_argument("--idle-timeout", type=float, default=12.0)
+    scan_scroll.add_argument("--poll-interval", type=float, default=0.25)
+    scan_scroll.add_argument("--debounce", type=float, default=0.6)
+    scan_scroll.add_argument("--change-threshold", type=float, default=0.02)
+    scan_scroll.add_argument("--countdown", type=int, default=3)
+    scan_scroll.add_argument(
+        "--debug",
+        nargs="?",
+        const=Path(".debug/scroll-session"),
+        type=Path,
+        help="save OCR viewports/results, optionally to a directory",
+    )
+    scan_scroll.add_argument("--output", type=Path)
     return parser
 
 
@@ -137,6 +159,50 @@ def main(argv: list[str] | None = None) -> int:
         except (WindowCaptureError, ValueError) as error:
             _write_json({"error": str(error)}, None)
             return 2
+        _write_json(result, args.output)
+        return 0
+    if args.command == "scan-scroll":
+        try:
+            result = scan_scroll_window(
+                hwnd=args.hwnd,
+                title=args.title,
+                process=args.process,
+                region=_region(args.region),
+                calibration_path=args.calibration,
+                scale=args.scale,
+                config=ScrollScanConfig(
+                    idle_timeout=args.idle_timeout,
+                    poll_interval=args.poll_interval,
+                    debounce=args.debounce,
+                    change_threshold=args.change_threshold,
+                ),
+                countdown=args.countdown,
+                debug_dir=args.debug,
+                notify=lambda message: print(message, file=sys.stderr, flush=True),
+            )
+        except WindowSelectionError as error:
+            _write_json(
+                {
+                    "error": str(error),
+                    "candidates": [item.to_dict() for item in error.candidates],
+                },
+                None,
+            )
+            return 2
+        except (WindowCaptureError, ValueError) as error:
+            _write_json({"error": str(error)}, None)
+            return 2
+        session = result["session"]
+        print(
+            "scan-scroll complete: "
+            f"rows={session['unique_rows']}, "
+            f"review_required={session['review_required_rows']}, "
+            f"ocr_viewports={session['ocr_frames']}, "
+            f"duplicate_skips={session['duplicate_viewports_skipped']}, "
+            f"duration={session['duration_sec']}s, "
+            f"avg_ocr={session['average_ocr_seconds']}s",
+            file=sys.stderr,
+        )
         _write_json(result, args.output)
         return 0
     raise AssertionError(f"unknown command: {args.command}")
