@@ -1,11 +1,13 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source": {
     "path": "reference/original/물물교환 지능형 스케쥴러_배포용 v14.1_by 송도조씨.html",
     "sha256": "155EE19C515A72627EFFB4884F540BBD7FCEA487967C47FE6CCB3A608BCEAE9F",
     "fields": [
-      "masterData.name",
-      "rawData key"
+      "masterData.name/tier",
+      "rawData key/coordinates/isOcean",
+      "getItemTier includes patterns",
+      "APP_CONFIG.TRADE_RULES"
     ]
   },
   "items": [
@@ -783,5 +785,997 @@
     {
       "name_ko": "떠돌이 상인의 배"
     }
-  ]
+  ],
+  "locations": [
+    {
+      "canonical_name": "달래나루",
+      "aliases": [
+        "달래나루"
+      ],
+      "x": -2471,
+      "y": 2682,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "해모 섬",
+      "aliases": [
+        "해모 섬",
+        "해모"
+      ],
+      "x": -3261,
+      "y": 1751,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "그란디하",
+      "aliases": [
+        "그란디하"
+      ],
+      "x": -2524,
+      "y": -1534,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "깊은 밤의 항구",
+      "aliases": [
+        "깊은 밤의 항구",
+        "깊은 밤"
+      ],
+      "x": -3049,
+      "y": -1975,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "올비아 해안",
+      "aliases": [
+        "올비아 해안"
+      ],
+      "x": -519,
+      "y": -440,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "에페리아 초소",
+      "aliases": [
+        "에페리아 초소"
+      ],
+      "x": -1424,
+      "y": -525,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "소산 주둔지 선착장",
+      "aliases": [
+        "소산 주둔지 선착장",
+        "소산 선착장",
+        "소산 주둔지"
+      ],
+      "x": 241,
+      "y": -356,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "성전 해안 정찰지",
+      "aliases": [
+        "성전 해안 정찰지",
+        "성전 해안"
+      ],
+      "x": 1026,
+      "y": 486,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "테야말 섬",
+      "aliases": [
+        "테야말 섬"
+      ],
+      "x": -1714,
+      "y": -555,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "라메다 섬",
+      "aliases": [
+        "라메다 섬"
+      ],
+      "x": -1685,
+      "y": -337,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "시오닐 섬",
+      "aliases": [
+        "시오닐 섬"
+      ],
+      "x": -1750,
+      "y": -550,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "모드릭 섬",
+      "aliases": [
+        "모드릭 섬"
+      ],
+      "x": -1576,
+      "y": -476,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "바에자 섬",
+      "aliases": [
+        "바에자 섬"
+      ],
+      "x": -1500,
+      "y": -509,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "진버레이 섬",
+      "aliases": [
+        "진버레이 섬"
+      ],
+      "x": -1534,
+      "y": -343,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "데이튼 섬",
+      "aliases": [
+        "데이튼 섬"
+      ],
+      "x": -1550,
+      "y": -300,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "네트넘 섬",
+      "aliases": [
+        "네트넘 섬"
+      ],
+      "x": -1451,
+      "y": -235,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "오벤 섬",
+      "aliases": [
+        "오벤 섬"
+      ],
+      "x": -1389,
+      "y": -198,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "던데 섬",
+      "aliases": [
+        "던데 섬"
+      ],
+      "x": -1357,
+      "y": -271,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "에버딘 섬",
+      "aliases": [
+        "에버딘 섬"
+      ],
+      "x": -1307,
+      "y": -246,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "알브레서 섬",
+      "aliases": [
+        "알브레서 섬"
+      ],
+      "x": -1232,
+      "y": -287,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "바라테르 섬",
+      "aliases": [
+        "바라테르 섬"
+      ],
+      "x": -1217,
+      "y": -353,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "란디스 섬",
+      "aliases": [
+        "란디스 섬"
+      ],
+      "x": -1364,
+      "y": -442,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "세르카 섬",
+      "aliases": [
+        "세르카 섬"
+      ],
+      "x": -1370,
+      "y": -503,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "테스테 섬",
+      "aliases": [
+        "테스테 섬"
+      ],
+      "x": -1457,
+      "y": 49,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "알마이 섬",
+      "aliases": [
+        "알마이 섬"
+      ],
+      "x": -1377,
+      "y": 123,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "쿠이트 제도",
+      "aliases": [
+        "쿠이트 제도"
+      ],
+      "x": -1276,
+      "y": 238,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "파딕스 섬",
+      "aliases": [
+        "파딕스 섬"
+      ],
+      "x": -1276,
+      "y": 205,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "아리타 섬",
+      "aliases": [
+        "아리타 섬"
+      ],
+      "x": -1011,
+      "y": 127,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "리스즈 섬",
+      "aliases": [
+        "리스즈 섬"
+      ],
+      "x": -991,
+      "y": -49,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "스타렌 섬",
+      "aliases": [
+        "스타렌 섬"
+      ],
+      "x": -1025,
+      "y": -198,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "루루브 섬",
+      "aliases": [
+        "루루브 섬"
+      ],
+      "x": -935,
+      "y": -129,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "나르보 섬",
+      "aliases": [
+        "나르보 섬"
+      ],
+      "x": -862,
+      "y": 20,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "마르카 섬",
+      "aliases": [
+        "마르카 섬"
+      ],
+      "x": -857,
+      "y": -101,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "타슈 섬",
+      "aliases": [
+        "타슈 섬"
+      ],
+      "x": -703,
+      "y": 367,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "레마 섬",
+      "aliases": [
+        "레마 섬"
+      ],
+      "x": -533,
+      "y": 278,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "인버넨 섬",
+      "aliases": [
+        "인버넨 섬"
+      ],
+      "x": -709,
+      "y": 44,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "앙쥬 섬",
+      "aliases": [
+        "앙쥬 섬"
+      ],
+      "x": -727,
+      "y": -122,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "툴루 섬",
+      "aliases": [
+        "툴루 섬"
+      ],
+      "x": -615,
+      "y": 100,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "발베쥬 섬",
+      "aliases": [
+        "발베쥬 섬"
+      ],
+      "x": -631,
+      "y": -50,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "에베토 섬",
+      "aliases": [
+        "에베토 섬"
+      ],
+      "x": -612,
+      "y": -162,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "두흐 섬",
+      "aliases": [
+        "두흐 섬"
+      ],
+      "x": -638,
+      "y": -197,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "마를레느 섬",
+      "aliases": [
+        "마를레느 섬"
+      ],
+      "x": -558,
+      "y": -54,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "오르프스 섬",
+      "aliases": [
+        "오르프스 섬"
+      ],
+      "x": -538,
+      "y": 110,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "마리베노 섬",
+      "aliases": [
+        "마리베노 섬"
+      ],
+      "x": -460,
+      "y": -156,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "루이바노 섬",
+      "aliases": [
+        "루이바노 섬"
+      ],
+      "x": -508,
+      "y": -263,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "에프데 룬 섬",
+      "aliases": [
+        "에프데 룬 섬"
+      ],
+      "x": -379,
+      "y": -305,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "바레미 섬",
+      "aliases": [
+        "바레미 섬"
+      ],
+      "x": -377,
+      "y": 2,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "웨이타 섬",
+      "aliases": [
+        "웨이타 섬"
+      ],
+      "x": -301,
+      "y": -83,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "파라타마 섬",
+      "aliases": [
+        "파라타마 섬"
+      ],
+      "x": -285,
+      "y": -196,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "베이루와 섬",
+      "aliases": [
+        "베이루와 섬"
+      ],
+      "x": -182,
+      "y": -308,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "칸베라 섬",
+      "aliases": [
+        "칸베라 섬"
+      ],
+      "x": -190,
+      "y": -113,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "아라킬 섬",
+      "aliases": [
+        "아라킬 섬"
+      ],
+      "x": -152,
+      "y": -161,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "오스트라 섬",
+      "aliases": [
+        "오스트라 섬"
+      ],
+      "x": -39,
+      "y": -193,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "타라무라 섬",
+      "aliases": [
+        "타라무라 섬"
+      ],
+      "x": -73,
+      "y": -248,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "델링하트 섬",
+      "aliases": [
+        "델링하트 섬"
+      ],
+      "x": 124,
+      "y": -219,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "필바라 섬",
+      "aliases": [
+        "필바라 섬"
+      ],
+      "x": 248,
+      "y": -240,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "푸자라 섬",
+      "aliases": [
+        "푸자라 섬"
+      ],
+      "x": 256,
+      "y": 25,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "아지르 섬",
+      "aliases": [
+        "아지르 섬"
+      ],
+      "x": -206,
+      "y": 97,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "알나하 섬",
+      "aliases": [
+        "알나하 섬"
+      ],
+      "x": -304,
+      "y": 215,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "라시드 섬",
+      "aliases": [
+        "라시드 섬"
+      ],
+      "x": -222,
+      "y": 309,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "알 수 없는 섬",
+      "aliases": [
+        "알 수 없는 섬"
+      ],
+      "x": 232,
+      "y": -359,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "소코타 섬",
+      "aliases": [
+        "소코타 섬"
+      ],
+      "x": 435,
+      "y": -373,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "리에드 섬",
+      "aliases": [
+        "리에드 섬"
+      ],
+      "x": 596,
+      "y": -267,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "에스파 섬",
+      "aliases": [
+        "에스파 섬"
+      ],
+      "x": 671,
+      "y": -121,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "티그리스 섬",
+      "aliases": [
+        "티그리스 섬"
+      ],
+      "x": 630,
+      "y": -69,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "시르나 섬",
+      "aliases": [
+        "시르나 섬"
+      ],
+      "x": 732,
+      "y": -60,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "오리샤 섬",
+      "aliases": [
+        "오리샤 섬"
+      ],
+      "x": 659,
+      "y": 95,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "보아 섬",
+      "aliases": [
+        "보아 섬"
+      ],
+      "x": 665,
+      "y": 219,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "로즈반 섬",
+      "aliases": [
+        "로즈반 섬"
+      ],
+      "x": 384,
+      "y": 323,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "샤샤 섬",
+      "aliases": [
+        "샤샤 섬"
+      ],
+      "x": 275,
+      "y": 321,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "포르타넨 섬",
+      "aliases": [
+        "포르타넨 섬"
+      ],
+      "x": 339,
+      "y": 448,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "레라오 섬",
+      "aliases": [
+        "레라오 섬"
+      ],
+      "x": 285,
+      "y": 591,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "틴베라 섬",
+      "aliases": [
+        "틴베라 섬"
+      ],
+      "x": 152,
+      "y": 615,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "할마드 섬",
+      "aliases": [
+        "할마드 섬"
+      ],
+      "x": 1059,
+      "y": 162,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "카슈마 섬",
+      "aliases": [
+        "카슈마 섬"
+      ],
+      "x": 1096,
+      "y": 222,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "더코 섬",
+      "aliases": [
+        "더코 섬"
+      ],
+      "x": 1679,
+      "y": 225,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "벨리아 마을 해변",
+      "aliases": [
+        "벨리아 마을 해변"
+      ],
+      "x": -397,
+      "y": -502,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "오킬루아의 눈",
+      "aliases": [
+        "오킬루아의 눈"
+      ],
+      "x": -609,
+      "y": 824,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "까마귀의 둥지",
+      "aliases": [
+        "까마귀의 둥지"
+      ],
+      "x": 213,
+      "y": 1037,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "하코번 섬",
+      "aliases": [
+        "하코번 섬"
+      ],
+      "x": 2779,
+      "y": 790,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "안카도 내항",
+      "aliases": [
+        "안카도 내항"
+      ],
+      "x": 2076,
+      "y": 143,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "아레하자 마을",
+      "aliases": [
+        "아레하자 마을"
+      ],
+      "x": 3383,
+      "y": 1657,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "일리야 섬",
+      "aliases": [
+        "일리야",
+        "일리야 섬"
+      ],
+      "x": 0,
+      "y": 0,
+      "is_ocean": false
+    },
+    {
+      "canonical_name": "떠내려온 미완성 선박",
+      "aliases": [
+        "떠내려온 미완성 선박"
+      ],
+      "x": -1827,
+      "y": 2444,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "그믐달 길드의 중범선",
+      "aliases": [
+        "그믐달 길드의 중범선"
+      ],
+      "x": -2137,
+      "y": 1915,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "난파된 하란의 수송선",
+      "aliases": [
+        "난파된 하란의 수송선"
+      ],
+      "x": -1704,
+      "y": 1590,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "파키오의 전투 뗏목",
+      "aliases": [
+        "파키오의 전투 뗏목"
+      ],
+      "x": -690,
+      "y": 2208,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "랑티니아의 전투 뗏목",
+      "aliases": [
+        "랑티니아의 전투 뗏목"
+      ],
+      "x": -1566,
+      "y": 2178,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "난파된 콕스해적선",
+      "aliases": [
+        "난파된 콕스해적선"
+      ],
+      "x": -1821,
+      "y": 358,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "난파된 해상군의 배",
+      "aliases": [
+        "난파된 해상군의 배"
+      ],
+      "x": -2225,
+      "y": 550,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "난파된 릭쿤의 배",
+      "aliases": [
+        "난파된 릭쿤의 배"
+      ],
+      "x": -1921,
+      "y": 861,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "난파된 고대 유적 수송선",
+      "aliases": [
+        "난파된 고대 유적 수송선"
+      ],
+      "x": -1620,
+      "y": 1136,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "까마귀 상단 소유의 선박",
+      "aliases": [
+        "까마귀 상단 소유의 선박"
+      ],
+      "x": -1282,
+      "y": 1379,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "숄라스 치코의 해적 연합",
+      "aliases": [
+        "숄라스 치코의 해적 연합"
+      ],
+      "x": -2034,
+      "y": 1450,
+      "is_ocean": true
+    },
+    {
+      "canonical_name": "떠돌이 상인의 배",
+      "aliases": [
+        "떠돌이 상인의 배"
+      ],
+      "x": -1314,
+      "y": 1858,
+      "is_ocean": true
+    }
+  ],
+  "special_items": [
+    {
+      "name_ko": "화려한 진주 결정",
+      "category": "mat",
+      "patterns": [
+        "진주 결정"
+      ]
+    },
+    {
+      "name_ko": "화려한 암염 주괴",
+      "category": "mat",
+      "patterns": [
+        "암염 주괴"
+      ]
+    },
+    {
+      "name_ko": "빛나는 코발트 주괴",
+      "category": "mat",
+      "patterns": [
+        "코발트 주괴"
+      ]
+    },
+    {
+      "name_ko": "오킬루아의 꽃",
+      "category": "mat",
+      "patterns": [
+        "오킬루아의 꽃"
+      ]
+    },
+    {
+      "name_ko": "파도의 블랙스톤",
+      "category": "mat",
+      "patterns": [
+        "파도의 블랙스톤"
+      ]
+    },
+    {
+      "name_ko": "유실된 무역품 상자",
+      "category": "mat",
+      "patterns": [
+        "유실된 무역품 상자"
+      ]
+    },
+    {
+      "name_ko": "흑수정 장식 팔찌",
+      "category": "mat",
+      "patterns": [
+        "흑수정 장식 팔찌"
+      ]
+    },
+    {
+      "name_ko": "까마귀 주화",
+      "category": "coin",
+      "patterns": [
+        "까마귀 주화"
+      ]
+    },
+    {
+      "name_ko": "대양의 견고한 현철",
+      "category": "mat",
+      "patterns": [
+        "대양의 견고한 현철"
+      ]
+    }
+  ],
+  "item_semantic_patterns": [
+    {
+      "pattern": "진주 결정",
+      "category": "mat"
+    },
+    {
+      "pattern": "암염 주괴",
+      "category": "mat"
+    },
+    {
+      "pattern": "코발트 주괴",
+      "category": "mat"
+    },
+    {
+      "pattern": "오킬루아의 꽃",
+      "category": "mat"
+    },
+    {
+      "pattern": "파도의 블랙스톤",
+      "category": "mat"
+    },
+    {
+      "pattern": "대양의 견고한 현철",
+      "category": "mat"
+    },
+    {
+      "pattern": "유실된 무역품 상자",
+      "category": "mat"
+    },
+    {
+      "pattern": "흑수정 장식 팔찌",
+      "category": "mat"
+    },
+    {
+      "pattern": "까마귀 주화",
+      "category": "coin"
+    }
+  ],
+  "trade_rules": {
+    "2": {
+      "req": 1,
+      "get": 3
+    },
+    "3": {
+      "req": 1,
+      "get": 3
+    },
+    "4": {
+      "req": 1,
+      "get": 2
+    },
+    "5": {
+      "req": 1,
+      "get": 1
+    },
+    "6": {
+      "req": 1,
+      "get": 1
+    },
+    "7": {
+      "req": 1,
+      "get": 1
+    }
+  }
 }

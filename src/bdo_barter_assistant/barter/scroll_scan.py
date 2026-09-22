@@ -19,6 +19,7 @@ from bdo_barter_assistant.barter.collection import (
     visual_overlap_length,
 )
 from bdo_barter_assistant.barter.pipeline import scan_barter_frame
+from bdo_barter_assistant.barter.trade_contract import normalize_trade_observation
 from bdo_barter_assistant.capture.calibration import (
     default_calibration_path,
     resolve_barter_region,
@@ -44,6 +45,7 @@ from bdo_barter_assistant.ocr.layout import (
     detect_row_separator_bands,
     segment_complete_rows,
 )
+from bdo_barter_assistant.reference_data import load_ocr_dictionary
 
 
 @dataclass(frozen=True)
@@ -461,6 +463,9 @@ def collect_scroll_session(
 
     ended = clock()
     rows = finalize_collected_rows(collected_rows)
+    if any("scheduler_contract" in row for row in rows):
+        dictionary = load_ocr_dictionary()
+        rows = [normalize_trade_observation(row, dictionary) for row in rows]
     review_count = sum(bool(row.get("review_required")) for row in rows)
     every_transition_has_overlap = all(
         overlap > 0 for overlap in accepted_viewport_overlaps[1:]

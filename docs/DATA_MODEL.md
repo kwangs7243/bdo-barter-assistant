@@ -117,6 +117,36 @@ island.reference_id + from_item.reference_id + to_item.reference_id + remaining_
 
 키가 같아도 수량이나 원문 충돌이 있으면 자동 병합하지 않고 검수한다.
 
+## 6.1 Gemini 호환 Trade Contract
+
+로컬 OCR 후보는 원본 HTML의 `scannedTrades` 의미로 정규화한다. JSON 필드명은 원본 호환을 위해 camelCase를 사용하며, 기존 OCR 행의 snake_case 관찰 필드와 함께 보존한다.
+
+```json
+{
+  "scanned_trade": {
+    "island": "오스트라 섬",
+    "fromItem": "오색 구슬",
+    "reqAmount": 1,
+    "toItem": "걸쭉한 괴생물 혈액",
+    "count": 10,
+    "yield": 3
+  },
+  "scheduler_contract": {
+    "scheduler_ready": true,
+    "from_tier": 2,
+    "to_tier": 3,
+    "exception": "none",
+    "provenance": {
+      "reqAmount": {"value": 1, "source": "reference_rule"},
+      "yield": {"value": 3, "source": "reference_rule"},
+      "count": {"value": 10, "source": "ocr"}
+    }
+  }
+}
+```
+
+일반 T2/T3/T4/T5~T7 교환과 mat의 `reqAmount`/`yield`는 reference rule에서 파생한다. `fromTier == 0`은 `reqAmount` OCR, `toTier == coin`은 `yield` OCR이 필요하다. `count: 0`은 확인된 실제 값이며 `null`과 다르다. 필요한 논리값을 완성할 수 없을 때만 `review_required`를 설정한다.
+
 ## 7. Inventory Record
 
 ```json
@@ -230,4 +260,3 @@ island.reference_id + from_item.reference_id + to_item.reference_id + remaining_
 ```
 
 실제 저장 형식은 M4에서 결정한다. 형식과 무관하게 원자적 저장, schema migration, 백업 복구, 중복 완료 방지는 필수다.
-

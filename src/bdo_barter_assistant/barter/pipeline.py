@@ -7,6 +7,7 @@ from typing import Any
 
 from PIL import Image
 
+from bdo_barter_assistant.barter.trade_contract import normalize_trade_observation
 from bdo_barter_assistant.capture.region import Region, crop_region
 from bdo_barter_assistant.matching.dictionary import DictionaryMatch, match_dictionary
 from bdo_barter_assistant.ocr.amount import AmountObservation, read_amount
@@ -137,7 +138,8 @@ def scan_barter_frame(
         }
         review_required = not all(field_status.values())
         normalized_rows.append(
-            {
+            normalize_trade_observation(
+                {
                 "barter_row_id": f"barter_sample_{row.index + 1}",
                 "row_index": row.index,
                 "bounding_box": [0, row.top, barter_area.width, row.bottom],
@@ -169,7 +171,9 @@ def scan_barter_frame(
                     "yield_amount": _amount_payload(yield_amount),
                     "ocr_confidence": None,
                 },
-            }
+                },
+                dictionary,
+            )
         )
 
     finished = time.perf_counter()

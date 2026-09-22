@@ -150,3 +150,11 @@
 - 연속성: 이전 complete-row fingerprint suffix와 현재 prefix가 최소 1행 겹쳐야 accepted한다. OCR 문자열은 row identity의 primary source로 사용하지 않는다. 첫 viewport의 scrollbar top, 모든 accepted transition overlap, 마지막 viewport의 scrollbar bottom이 모두 확인될 때만 `coverage_complete=true`다.
 - 이유: 실제 스크롤은 row snap이 아니라 연속 pixel scroll이어서 고정 `(0,222,1023,451)` ROI가 scroll phase에 따라 하단 complete row를 자르고, OCR 기반 병합이 누락을 감추었다.
 - 영향: 제공된 서로 다른 phase 캡처에서 separator와 complete row를 각각 6 bands/5 rows, 8 bands/6 rows로 검출했다. 최종 live run은 11개 viewport, 56행, accepted overlap `[0,1,1,1,1,1,1,1,1,1,1]`, 중간 overlap 0 거부·복구, scrollbar top/bottom과 `coverage_complete=true`를 확인했다. OCR 의미 필드의 `review_required`는 coverage와 별도 문제로 유지한다.
+
+## D024 — M3의 목표는 local `scannedTrades` 호환 입력이다
+
+- 상태: Accepted for M3 contract validation
+- 결정: 원본 Gemini prompt의 `{island, fromItem, reqAmount, toItem, count, yield}`를 로컬 `trade_contract` 계층이 만든다. 여섯 화면 관찰값의 완전성 대신 scheduler가 실제 필요로 하는 논리값의 완전성을 `scheduler_ready`로 판단한다.
+- 규칙: 원본 `TRADE_RULES`의 T2 `1→3`, T3 `1→3`, T4 `1→2`, T5~T7 `1→1` 및 mat 규칙은 reference에서 파생한다. tier 0 source의 `reqAmount`, coin destination의 `yield`, `count`만 해당 화면 관찰값이 필수다.
+- 이유: 원본 `renderTrades`와 `runAlgorithmAllModes`가 일반 수량을 자체 계산하며, OCR glyph 누락을 전체 행 실패로 취급하면 Gemini 대체 계층의 의미가 원본과 달라진다.
+- 영향: `scanned_trade`, `scheduler_contract.provenance`, `scheduler_ready`, `review_reasons`를 raw OCR과 함께 보존한다. capture/scroll/coverage, scheduler engine, inventory는 이 결정의 범위가 아니다.

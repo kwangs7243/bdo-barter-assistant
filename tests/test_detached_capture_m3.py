@@ -146,4 +146,8 @@ def test_detached_layout_profile_reads_real_six_row_capture() -> None:
     # Item dictionary coverage is intentionally measured, not used as golden
     # truth: unseen live items may not exist in the current reference list.
     assert sum(row["to_item"]["value"] is not None for row in result["rows"]) >= 5
-    assert all(row["review_required"] for row in result["rows"])
+    # Contract readiness is distinct from six-field OCR completeness: ordinary
+    # trades may derive req/yield from the reference rules, while base/coin
+    # exceptions remain reviewable when their screen quantity is missing.
+    assert all("scheduler_contract" in row for row in result["rows"])
+    assert sum(row["scheduler_ready"] for row in result["rows"]) >= 1

@@ -44,9 +44,9 @@
 
 실제 `BlackDesert64.exe` 창의 1920×1080 client area를 DPI 96에서 메모리 캡처해 기존 OCR pipeline으로 6행을 출력했다. 디버그 이미지는 저장하지 않았고 네트워크 요청은 0회였다.
 
-## M3 — Scroll Collection
+## M3 — Local Gemini Replacement
 
-상태: **완료 / PASS (2026-09-22)**
+상태: **CAPTURE/COVERAGE PASS · TRADE CONTRACT VALIDATION IN PROGRESS (2026-09-22)**
 
 - [x] `Panel_Window_Barter_Search` detached HWND 전용 선택과 메인창 오선택 차단
 - [x] detached client에서 전체 가시 list viewport bootstrap 후 직접 캡처
@@ -60,13 +60,15 @@
 - [x] accepted viewport beep/log, OCR worker 비동기 처리
 - [x] countdown, 조정 가능한 idle timeout, `Ctrl+C` 종료
 - [x] 기본 메모리 처리와 명시적 `--debug` 저장
-- [x] M1/M2 회귀 포함 자동 테스트 41개 통과
+- [x] M1/M2 회귀 포함 자동 테스트 46개 통과
 - [x] detached 1023×713 캡처에서 전체 viewport `(0,220,1023,493)`와 complete row 6개 확인
 - [x] 서로 다른 scroll phase 샘플에서 complete row 5개/6개와 partial row 제외 확인
 - [x] detached OCR layout profile을 실제 샘플 좌표로 보정하고 샘플 6행 지표 측정
 - [x] 실제 분리 물교창에서 목록 처음부터 끝까지 수동 스크롤 재검증
 
-최종 live run은 detached HWND에서 11개 viewport를 모두 overlap으로 연결해 56행을 수집했다. overlap 0 화면 1개는 거부 후 복구했고 duplicate 1개를 건너뛰었으며, `start_at_top=true`, `end_at_bottom=true`, `coverage_complete=true`, 자동 종료를 확인했다. 의미 필드는 54행이 `review_required`이므로 행 coverage PASS와 OCR 후속 개선을 구분한다. M4는 별도 검토와 지시 전까지 시작하지 않는다.
+최종 live run은 detached HWND에서 11개 viewport를 모두 overlap으로 연결해 56행을 수집했다. overlap 0 화면 1개는 거부 후 복구했고 duplicate 1개를 건너뛰었으며, `start_at_top=true`, `end_at_bottom=true`, `coverage_complete=true`, 자동 종료를 확인했다. 이 coverage 결과는 PASS로 유지한다.
+
+현재 `.debug/scroll-result.json`을 local contract로 재평가한 결과는 56행 중 `scheduler_ready=23`, `review_required=33`이다. 섬 45/56, fromItem 53/56, toItem 43/56, count 54/56이 reference-aware 재평가에서 해소됐다. base `reqAmount` 예외 8건 중 0건, coin `yield` 예외 1건 중 0건이 관측되어 M3 전체 PASS는 보류한다. 일반 교환의 수량 glyph 누락은 더 이상 그 자체로 검수 사유가 아니다. M4는 별도 검토와 지시 전까지 시작하지 않는다.
 
 ## M4 — Local Inventory
 

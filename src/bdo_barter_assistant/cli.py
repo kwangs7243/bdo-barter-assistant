@@ -8,6 +8,7 @@ from typing import Any
 
 from bdo_barter_assistant.barter.pipeline import scan_barter_image
 from bdo_barter_assistant.barter.scroll_scan import ScrollScanConfig, scan_scroll_window
+from bdo_barter_assistant.barter.trade_contract import evaluate_contract_payload
 from bdo_barter_assistant.barter.window_scan import scan_window
 from bdo_barter_assistant.capture.region import Region
 from bdo_barter_assistant.capture.windows import (
@@ -60,6 +61,10 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--scale", type=int, default=4)
     evaluate.add_argument("--repeat", type=int, default=1)
     evaluate.add_argument("--output", type=Path)
+
+    evaluate_contract = subparsers.add_parser("evaluate-contract")
+    evaluate_contract.add_argument("input", type=Path)
+    evaluate_contract.add_argument("--output", type=Path)
 
     windows = subparsers.add_parser("windows")
     windows.add_argument("--title", help="case-insensitive title substring")
@@ -125,6 +130,10 @@ def main(argv: list[str] | None = None) -> int:
             repeat=args.repeat,
         )
         _write_json(result, args.output)
+        return 0
+    if args.command == "evaluate-contract":
+        payload = json.loads(args.input.read_text(encoding="utf-8"))
+        _write_json(evaluate_contract_payload(payload), args.output)
         return 0
     if args.command == "windows":
         try:

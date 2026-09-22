@@ -2,6 +2,7 @@
 .uv-cache/
 .pytest_cache/
 .pytest-tmp/
+.pytest-tmp-*/
 __pycache__/
 *.py[cod]
 .tmp-ocr-probe/

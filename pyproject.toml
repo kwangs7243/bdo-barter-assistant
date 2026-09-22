@@ -29,4 +29,4 @@ packages = ["src/bdo_barter_assistant"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--basetemp=.pytest-tmp"
+addopts = "-p no:cacheprovider"

@@ -21,4 +21,17 @@ def test_reference_dictionary_is_extracted_from_html() -> None:
     assert "반달 조리용 칼" in item_names
     assert "칸베라 섬" in island_names
     assert "일리야" in island_names
-
+    assert payload["schema_version"] == 2
+    assert payload["trade_rules"] == {
+        "2": {"req": 1, "get": 3},
+        "3": {"req": 1, "get": 3},
+        "4": {"req": 1, "get": 2},
+        "5": {"req": 1, "get": 1},
+        "6": {"req": 1, "get": 1},
+        "7": {"req": 1, "get": 1},
+    }
+    assert len(payload["locations"]) == 95
+    assert next(
+        location for location in payload["locations"] if "해모" in location["aliases"]
+    )["canonical_name"] == "해모 섬"
+    assert {item["category"] for item in payload["special_items"]} == {"mat", "coin"}

@@ -12,7 +12,9 @@ Capture
 OCR
   ↓ Raw OCR Tokens
 Matching
-  ↓ Normalized Barter Rows + Confidence
+  ↓ Candidate Barter Rows + Confidence
+Reference Normalization / Trade Contract
+  ↓ scannedTrades-compatible Rows + Provenance
 Barter Review
   ↓ Confirmed Barter List
 Scheduler ← Inventory Snapshot + User Config + Reference Data
@@ -49,6 +51,8 @@ Storage
 - 열 위치, 단계, 수량 형식과 문자열 유사도를 결합
 - 정규화 후보, 확신도, 대안 후보 목록 제공
 - 임계값 미달을 `review_required`로 표시
+- `[N단계]`를 별도 관측값으로 보존하고 reference tier 후보를 안전할 때만 좁힘
+- 같은 좌표의 섬 alias는 canonical location 단위로 점수와 margin을 계산
 
 ### `barter`
 
@@ -56,7 +60,9 @@ Storage
 - viewport의 suffix/prefix 공통 행을 이용한 스크롤 순서 보존과 중복 제거
 - 중복 관찰 중 더 신뢰도 높은 필드와 raw provenance 보존
 - 사용자 검수·수정 상태 관리
-- OCR 세부 구현과 스케줄 점수 계산을 알지 못함
+- `reference normalization / trade contract`는 원본 HTML의 `getItemTier`, `TRADE_RULES`, `renderTrades`, `runAlgorithmAllModes` 의미를 사용해 `scannedTrades` 호환 객체를 완성한다.
+- 일반 교환 수량은 reference rule로 파생하고, base `reqAmount`와 coin `yield`처럼 실제 화면값이 필요한 예외만 검수 대상으로 남긴다.
+- OCR 관찰의 완전성과 scheduler 입력 완전성은 별도 상태로 보존한다.
 
 ### `scheduler`
 
@@ -146,4 +152,5 @@ M5에서는 새 알고리즘을 먼저 설계하지 않는다.
 - 기본 ROI는 검증된 1920×1080 M1 영역을 client 크기에 정규화해 적용하며, 명시적 ROI를 1회 저장해 대체할 수 있다.
 - 최소화되었거나 완전히 가려진 창의 우회 캡처, 입력 자동화, 스크롤 수집은 지원하지 않는다.
 - M2는 실제 `BlackDesert64.exe` HWND에서 1920×1080 client area 캡처와 기존 OCR pipeline 연결을 검증했다.
-- M3는 분리 물교창의 전체 가시 list viewport를 direct capture하고, 동적 separator로 partial row를 제외한다. 최근 8개 frame과 0.7초 동안 geometry가 안정된 뒤 complete-row image overlap이 확인된 viewport만 수집한다. scrollbar top/bottom과 모든 accepted transition overlap이 연결될 때만 `coverage_complete=true`다. detached client의 열 배치에는 별도 `detached_barter_1023x713` OCR layout profile을 사용하며 M1 reference profile은 기본값으로 보존한다. 실제 11개 viewport live run에서 56행의 top-to-bottom coverage와 자동 종료를 검증해 M3를 PASS 처리했다. 의미 필드의 `review_required`는 행 coverage와 별도 후속 문제다.
+- M3 capture/coverage는 분리 물교창의 전체 가시 list viewport를 direct capture하고, 동적 separator로 partial row를 제외한다. 최근 8개 frame과 0.7초 동안 geometry가 안정된 뒤 complete-row image overlap이 확인된 viewport만 수집한다. scrollbar top/bottom과 모든 accepted transition overlap이 연결될 때만 `coverage_complete=true`다. detached client의 열 배치에는 별도 `detached_barter_1023x713` OCR layout profile을 사용하며 M1 reference profile은 기본값으로 보존한다. 실제 11개 viewport live run에서 56행의 top-to-bottom coverage와 자동 종료를 검증해 capture/coverage를 PASS 처리했다. 의미 필드와 local `scannedTrades` contract는 별도 검증 대상이다.
+- M3 coverage는 위 구조로 PASS했지만, local Gemini replacement contract는 `barter/trade_contract.py`에서 별도 검증한다. `scheduler_ready`는 OCR 여섯 필드가 모두 채워졌다는 뜻이 아니라 원본 scheduler에 필요한 논리값과 예외 수량이 안전하게 완성됐다는 뜻이다.
