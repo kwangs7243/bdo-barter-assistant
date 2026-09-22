@@ -109,15 +109,44 @@
 
 ## D018 — M3 viewport 변화는 축소 grayscale 평균 차이로 판정한다
 
-- 상태: Accepted for M3
-- 결정: 물물교환 ROI를 96×48 grayscale로 축소하고 평균 절대 픽셀 차이가 0.02를 넘을 때만 새 viewport 후보로 본다. 0.6초 안정화 후 OCR하며 기본 poll은 0.25초, idle timeout은 12초다.
-- 이유: 추가 CV 의존성 없이 OCR 전 단계에서 동일 화면을 빠르게 제외할 수 있다. M1 샘플의 합성 세로 이동 측정에서 2px은 0.0092, 5px은 0.0218, 10px은 0.0396으로 측정되어 미세 흔들림과 실제 스크롤 변화를 구분했다.
-- 영향: 모든 값은 CLI 옵션으로 조정 가능하다. 실제 게임 스크롤에서 150 frame 중 안정된 3개 viewport만 OCR하고 중복 viewport 62개를 건너뛰어 기본값을 유지한다.
+- 상태: Superseded by D020/D021
+- 결정: M3 초기 구현은 96×48 grayscale 평균 차이 하나를 motion과 duplicate 판정에 함께 사용했다.
+- 이유: 추가 CV 의존성 없이 변경 후보를 찾기 위한 초기 기준이었다.
+- 영향: stale frame과 과도한 중복 제거가 live 누락으로 이어져 현재 안정화 설계에서는 motion/duplicate threshold와 최신 안정 frame 판정을 분리한다.
 
 ## D019 — M3 행 병합은 false merge 방지를 우선한다
 
-- 상태: Accepted for M3
+- 상태: Superseded for scroll collection by D023; OCR-observation merge fallback으로 유지
 - 결정: 기존 목록 suffix와 새 viewport prefix의 연속 공통 행만 병합한다. 확정된 필드가 충돌하면 병합하지 않으며, 핵심 이름 3개가 일치하거나 핵심 이름 2개와 수량 필드 1개 이상이 일치해야 같은 행으로 본다.
 - 이유: 일부 중복 행이 남는 것보다 서로 다른 실제 교환을 조용히 하나로 합치는 오류가 더 위험하다.
 - 영향: 병합할 때 더 높은 confidence와 null이 아닌 값을 우선하고 모든 raw 관찰을 provenance로 남긴다. 애매한 겹침은 별도 `review_required` 행으로 유지될 수 있다.
 - 검증: 자동 겹침 fixture는 12개 관찰을 순서가 유지된 9개 행으로 병합했다. 첫 live scroll의 3개 viewport에는 공통 행이 없어 live 병합은 발생하지 않았다.
+
+## D020 — M3는 detached barter HWND를 우선 캡처한다
+
+- 상태: Accepted for M3
+- 결정: 제목이 `Panel_Window_Barter_Search`이고 프로세스가 `BlackDesert64.exe`인 top-level HWND만 M3 캡처 대상으로 선택한다. 분리창이 없으면 메인 게임창으로 fallback하지 않고 즉시 오류로 종료한다.
+- 이유: 분리 물교창은 1023×713 client area로 물교 목록만 직접 캡처할 수 있어 메인 1920×1080 ROI의 누락 위험과 캡처 비용을 줄인다.
+- 영향: detached client 첫 프레임에서 complete row separator로 list ROI를 bootstrap하고, 이후에는 client-relative ROI만 ImageGrab한다. 자동 입력과 게임 내부 접근은 하지 않는다.
+
+## D021 — M3는 최신 안정 frame과 분리된 중복 임계값을 사용한다
+
+- 상태: Superseded by D023
+- 결정: poll 기본값 0.1초, 최근 3개 frame이 motion threshold 이하일 때 최신 frame을 accepted viewport로 큐에 넣는다. motion threshold 기본값은 0.02, duplicate threshold 기본값은 0.005로 별도 관리한다.
+- 이유: 마지막 큰 변화 시점의 stale/mid-scroll frame을 OCR하는 문제를 제거하고, 서로 다른 viewport를 중복으로 버리는 위험을 낮춘다.
+- 영향: OCR queue 전 `segment_complete_rows()`로 0개/비정상 geometry만 거부한다. accepted 시 beep/log를 내고 OCR worker는 캡처 loop를 막지 않는다.
+
+## D022 — detached OCR은 별도 layout profile로 보정한다
+
+- 상태: Accepted for M3 calibration
+- 결정: `Panel_Window_Barter_Search`의 row-local 좌표는 M1 reference 고정 박스와 분리한 `detached_barter_1023x713` 프로파일로 처리한다. M1 기본 프로파일과 matching threshold는 변경하지 않는다.
+- 이유: 실제 detached client 캡처는 행 높이는 같지만 열 폭이 1023px이고 item/icon 및 수량 glyph 위치가 달랐다. 공통 박스를 유지하면 획득품 첫 행과 수량이 누락되어 review가 증가했다.
+- 안전장치: 작은 detached 수량 glyph는 단일 `1`만 자동 확정하고 폭이 넓은 숫자는 null/review로 남긴다. 실제 전체 목록 live 재검증 전에는 M3 PASS로 승격하지 않는다.
+
+## D023 — M3 coverage는 동적 행 geometry와 시각적 연속성으로 증명한다
+
+- 상태: Accepted and live validated for M3
+- 결정: detached client에서 첫 complete row 위 separator부터 panel 하단까지 전체 가시 list viewport를 캡처한다. 넓은 row content band에서 separator를 동적으로 찾고, 연속 separator 사이 정상 높이의 complete row만 사용한다. 최근 8개 frame과 최소 0.7초 동안 separator y 좌표가 ±1px 이내일 때만 안정 frame으로 인정한다.
+- 연속성: 이전 complete-row fingerprint suffix와 현재 prefix가 최소 1행 겹쳐야 accepted한다. OCR 문자열은 row identity의 primary source로 사용하지 않는다. 첫 viewport의 scrollbar top, 모든 accepted transition overlap, 마지막 viewport의 scrollbar bottom이 모두 확인될 때만 `coverage_complete=true`다.
+- 이유: 실제 스크롤은 row snap이 아니라 연속 pixel scroll이어서 고정 `(0,222,1023,451)` ROI가 scroll phase에 따라 하단 complete row를 자르고, OCR 기반 병합이 누락을 감추었다.
+- 영향: 제공된 서로 다른 phase 캡처에서 separator와 complete row를 각각 6 bands/5 rows, 8 bands/6 rows로 검출했다. 최종 live run은 11개 viewport, 56행, accepted overlap `[0,1,1,1,1,1,1,1,1,1,1]`, 중간 overlap 0 거부·복구, scrollbar top/bottom과 `coverage_complete=true`를 확인했다. OCR 의미 필드의 `review_required`는 coverage와 별도 문제로 유지한다.

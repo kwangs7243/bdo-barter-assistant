@@ -48,16 +48,25 @@
 
 상태: **완료 / PASS (2026-09-22)**
 
-- [x] ROI grayscale 차이 기반 viewport 변경 감지
-- [x] poll + debounce 후 변경 화면에만 OCR 실행
-- [x] 겹치는 행의 순서 보존 병합과 confidence 개선
+- [x] `Panel_Window_Barter_Search` detached HWND 전용 선택과 메인창 오선택 차단
+- [x] detached client에서 전체 가시 list viewport bootstrap 후 직접 캡처
+- [x] 넓은 content band의 동적 separator 검출과 scroll-phase 독립 complete-row segmentation
+- [x] 최근 8개 frame 및 0.7초 separator geometry 기반 안정 viewport 판정
+- [x] motion / duplicate threshold 분리
+- [x] complete row 사전 검증과 partial row 제외
+- [x] complete-row visual overlap이 없는 viewport 거부와 순서 보존 병합
+- [x] scrollbar top/bottom 및 accepted transition overlap 기반 coverage 판정
 - [x] 충돌·불확실 행의 보수적 `review_required` 유지
+- [x] accepted viewport beep/log, OCR worker 비동기 처리
 - [x] countdown, 조정 가능한 idle timeout, `Ctrl+C` 종료
 - [x] 기본 메모리 처리와 명시적 `--debug` 저장
-- [x] M1/M2 회귀 포함 자동 테스트 24개 통과
-- [ ] 실제 게임에서 목록 처음부터 끝까지 수동 스크롤 재검증
+- [x] M1/M2 회귀 포함 자동 테스트 41개 통과
+- [x] detached 1023×713 캡처에서 전체 viewport `(0,220,1023,493)`와 complete row 6개 확인
+- [x] 서로 다른 scroll phase 샘플에서 complete row 5개/6개와 partial row 제외 확인
+- [x] detached OCR layout profile을 실제 샘플 좌표로 보정하고 샘플 6행 지표 측정
+- [x] 실제 분리 물교창에서 목록 처음부터 끝까지 수동 스크롤 재검증
 
-이전 live run은 52.75초 동안 150 frame을 캡처했지만 OCR viewport 3개와 15행만 생성해 66행 전체 수집에 실패했다. OCR 중에도 캡처를 계속하는 worker 수정 후 live 재검증이 필요하다.
+최종 live run은 detached HWND에서 11개 viewport를 모두 overlap으로 연결해 56행을 수집했다. overlap 0 화면 1개는 거부 후 복구했고 duplicate 1개를 건너뛰었으며, `start_at_top=true`, `end_at_bottom=true`, `coverage_complete=true`, 자동 종료를 확인했다. 의미 필드는 54행이 `review_required`이므로 행 coverage PASS와 OCR 후속 개선을 구분한다. M4는 별도 검토와 지시 전까지 시작하지 않는다.
 
 ## M4 — Local Inventory
 

@@ -9,10 +9,13 @@ from typing import Callable, Iterable
 
 from PIL import Image, ImageGrab
 
+from bdo_barter_assistant.capture.region import Region
+
 
 PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
 DEFAULT_GAME_TITLE_TERMS = ("검은사막", "black desert")
 DEFAULT_GAME_PROCESS_TERMS = ("blackdesert", "black desert")
+DETACHED_BARTER_TITLE = "Panel_Window_Barter_Search"
 
 
 class WindowCaptureError(RuntimeError):
@@ -332,6 +335,54 @@ def select_window(
     return matches[0]
 
 
+def select_scroll_target(
+    windows: Iterable[WindowInfo],
+    *,
+    hwnd: int | None = None,
+    title: str | None = None,
+    process: str | None = None,
+) -> tuple[WindowInfo, str, bool]:
+    """Select the detached barter HWND required by the scroll collector."""
+    available = list(windows)
+    if hwnd is not None or title is not None or process is not None:
+        selected = select_window(available, hwnd=hwnd, title=title, process=process)
+        detached = selected.title == DETACHED_BARTER_TITLE
+        if not detached:
+            raise WindowSelectionError(
+                "scan-scroll requires the detached Panel_Window_Barter_Search window",
+                [selected],
+            )
+        return selected, "detached_barter_window", True
+
+    detached = [
+        window
+        for window in available
+        if window.title == DETACHED_BARTER_TITLE
+        and any(
+            term in (window.process or "").casefold()
+            for term in DEFAULT_GAME_PROCESS_TERMS
+        )
+    ]
+    if len(detached) == 1:
+        return detached[0], "detached_barter_window", True
+    if len(detached) > 1:
+        raise WindowSelectionError(
+            "multiple detached barter windows were found; select one with --hwnd",
+            detached,
+        )
+
+    game_candidates = [
+        window
+        for window in filter_windows(available, game_only=True)
+        if window.title != DETACHED_BARTER_TITLE
+    ]
+    raise WindowSelectionError(
+        "detached Panel_Window_Barter_Search window not found; "
+        "open the detached barter window before scan-scroll",
+        game_candidates or available,
+    )
+
+
 def capture_client_area(
     window: WindowInfo,
     *,
@@ -355,3 +406,42 @@ def capture_client_area(
             f"{(rect.width, rect.height)}"
         )
     return CapturedWindow(window=window, image=image)
+
+
+def capture_client_region(
+    window: WindowInfo,
+    region: Region,
+    *,
+    grabber: Callable[[tuple[int, int, int, int]], Image.Image] | None = None,
+) -> Image.Image:
+    """Capture one client-relative region directly from screen pixels.
+
+    This avoids allocating a full client-area image for the scroll collector;
+    the single-window scan continues to use :func:`capture_client_area`.
+    """
+    if window.minimized:
+        raise WindowCaptureError("cannot capture a minimized window")
+    if (
+        region.x < 0
+        or region.y < 0
+        or region.width <= 0
+        or region.height <= 0
+        or region.x + region.width > window.client_size[0]
+        or region.y + region.height > window.client_size[1]
+    ):
+        raise WindowCaptureError("client-relative capture region is outside the window")
+    client = window.client_rect_screen
+    bbox = (
+        client.left + region.x,
+        client.top + region.y,
+        client.left + region.x + region.width,
+        client.top + region.y + region.height,
+    )
+    image = ImageGrab.grab(bbox=bbox, all_screens=True) if grabber is None else grabber(bbox)
+    image = image.convert("RGB")
+    if image.size != (region.width, region.height):
+        raise WindowCaptureError(
+            f"capture size {image.size} does not match region size "
+            f"{(region.width, region.height)}"
+        )
+    return image

@@ -4,7 +4,11 @@ from dataclasses import dataclass
 
 from PIL import Image
 
-from .layout import REFERENCE_ROW_HEIGHT, REFERENCE_WIDTH, SegmentedRow
+from .layout import (
+    REFERENCE_LAYOUT,
+    LayoutProfile,
+    SegmentedRow,
+)
 
 
 @dataclass(frozen=True)
@@ -14,10 +18,7 @@ class AmountObservation:
     signature: tuple[int, ...]
 
 
-_AMOUNT_BOXES = {
-    "req_amount": (310, 40, 317, 52),
-    "yield_amount": (684, 40, 694, 52),
-}
+_AMOUNT_BOXES = REFERENCE_LAYOUT.amount_boxes
 
 
 def _mask_signature(image: Image.Image, threshold: int = 175) -> tuple[int, ...]:
@@ -71,10 +72,41 @@ def _classify_small_digit(image: Image.Image) -> AmountObservation:
     return AmountObservation(None, 0.0, signature)
 
 
-def read_amount(row: SegmentedRow, field: str) -> AmountObservation:
-    left, top, right, bottom = _AMOUNT_BOXES[field]
-    width_scale = row.image.width / REFERENCE_WIDTH
-    height_scale = row.image.height / REFERENCE_ROW_HEIGHT
+def _classify_detached_glyph(image: Image.Image) -> AmountObservation:
+    """Conservatively recognize only a clean single ``1`` glyph.
+
+    The detached window renders stack counts at roughly 2-5 pixels wide and
+    overlaps item artwork for multi-digit values. Guessing those values caused
+    false confirmations, so anything wider than a narrow vertical stroke stays
+    unknown and is sent to review.
+    """
+    gray = image.convert("L")
+    threshold = 230
+    mask = [
+        (x, y)
+        for y in range(gray.height)
+        for x in range(gray.width)
+        if gray.getpixel((x, y)) >= threshold
+    ]
+    signature = _mask_signature(gray, threshold=threshold)
+    active_rows = [y for y, count in enumerate(signature) if count]
+    active_columns = sorted({x for x, _ in mask})
+    if not mask or len(active_rows) < 7:
+        return AmountObservation(None, 0.0, signature)
+    if len(active_columns) <= 2 and len(active_rows) >= 8:
+        return AmountObservation(1, 0.93, signature)
+    return AmountObservation(None, 0.0, signature)
+
+
+def read_amount(
+    row: SegmentedRow,
+    field: str,
+    *,
+    profile: LayoutProfile = REFERENCE_LAYOUT,
+) -> AmountObservation:
+    left, top, right, bottom = profile.amount_boxes[field]
+    width_scale = row.image.width / profile.coordinate_width
+    height_scale = row.image.height / profile.coordinate_height
     crop = row.image.crop(
         (
             round(left * width_scale),
@@ -83,4 +115,6 @@ def read_amount(row: SegmentedRow, field: str) -> AmountObservation:
             round(bottom * height_scale),
         )
     )
+    if profile.amount_mode == "detached_glyph":
+        return _classify_detached_glyph(crop)
     return _classify_small_digit(crop)

@@ -29,11 +29,12 @@ Storage
 ### `capture`
 
 - Win32 top-level window를 열거하고 제목·프로세스·HWND로 대상 선택
-- DPI-aware screen 좌표로 변환한 client area를 데스크톱에서 메모리 캡처
+- DPI-aware screen 좌표로 변환한 client area 또는 client-relative ROI를 데스크톱에서 메모리 캡처
+- M3는 `Panel_Window_Barter_Search` top-level HWND만 선택하며, 분리창이 없으면 즉시 오류로 종료
 - client-relative 물물교환 ROI와 window/client rect, DPI, 캡처 크기 메타데이터 제공
 - 일반 모드에서 캡처 파일을 영구 저장하지 않음
 - OCR, 품목명, 스케줄 규칙을 알지 못함
-- 축소 grayscale ROI의 평균 픽셀 차이로 viewport 변경 여부만 판정
+- 축소 grayscale motion과 동적 horizontal separator geometry로 scroll 관성 종료를 판정
 
 ### `ocr`
 
@@ -145,4 +146,4 @@ M5에서는 새 알고리즘을 먼저 설계하지 않는다.
 - 기본 ROI는 검증된 1920×1080 M1 영역을 client 크기에 정규화해 적용하며, 명시적 ROI를 1회 저장해 대체할 수 있다.
 - 최소화되었거나 완전히 가려진 창의 우회 캡처, 입력 자동화, 스크롤 수집은 지원하지 않는다.
 - M2는 실제 `BlackDesert64.exe` HWND에서 1920×1080 client area 캡처와 기존 OCR pipeline 연결을 검증했다.
-- M3는 변경 후 안정된 viewport만 OCR하고 겹치는 행을 보수적으로 병합하는 `scan-scroll` CLI를 구현했다. 이전 live run은 15행만 수집해 전체 검증에 실패했으며, OCR worker 분리 수정 후 재검증이 필요하다.
+- M3는 분리 물교창의 전체 가시 list viewport를 direct capture하고, 동적 separator로 partial row를 제외한다. 최근 8개 frame과 0.7초 동안 geometry가 안정된 뒤 complete-row image overlap이 확인된 viewport만 수집한다. scrollbar top/bottom과 모든 accepted transition overlap이 연결될 때만 `coverage_complete=true`다. detached client의 열 배치에는 별도 `detached_barter_1023x713` OCR layout profile을 사용하며 M1 reference profile은 기본값으로 보존한다. 실제 11개 viewport live run에서 56행의 top-to-bottom coverage와 자동 종료를 검증해 M3를 PASS 처리했다. 의미 필드의 `review_required`는 행 coverage와 별도 후속 문제다.

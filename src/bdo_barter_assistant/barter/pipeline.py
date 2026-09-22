@@ -10,7 +10,12 @@ from PIL import Image
 from bdo_barter_assistant.capture.region import Region, crop_region
 from bdo_barter_assistant.matching.dictionary import DictionaryMatch, match_dictionary
 from bdo_barter_assistant.ocr.amount import AmountObservation, read_amount
-from bdo_barter_assistant.ocr.layout import segment_complete_rows, text_field_crops
+from bdo_barter_assistant.ocr.layout import (
+    REFERENCE_LAYOUT,
+    LayoutProfile,
+    segment_complete_rows,
+    text_field_crops,
+)
 from bdo_barter_assistant.ocr.windows import OcrText, WindowsOcrAdapter
 from bdo_barter_assistant.reference_data import OcrDictionary, load_ocr_dictionary
 
@@ -61,6 +66,7 @@ def scan_barter_image(
     dictionary: OcrDictionary | None = None,
     ocr_adapter: WindowsOcrAdapter | None = None,
     scale: int = 4,
+    layout_profile: LayoutProfile = REFERENCE_LAYOUT,
 ) -> dict[str, Any]:
     """Run the M1 fixed-sample pipeline and return normalized rows plus timings."""
     started = time.perf_counter()
@@ -73,6 +79,7 @@ def scan_barter_image(
         dictionary=dictionary,
         ocr_adapter=ocr_adapter,
         scale=scale,
+        layout_profile=layout_profile,
         _started_at=started,
     )
 
@@ -85,6 +92,7 @@ def scan_barter_frame(
     dictionary: OcrDictionary | None = None,
     ocr_adapter: WindowsOcrAdapter | None = None,
     scale: int = 4,
+    layout_profile: LayoutProfile = REFERENCE_LAYOUT,
     _started_at: float | None = None,
 ) -> dict[str, Any]:
     """Run the unchanged M1 OCR stages on an in-memory image frame."""
@@ -98,7 +106,9 @@ def scan_barter_frame(
 
     fields: dict[str, Image.Image] = {}
     for row in rows:
-        for field, crop in text_field_crops(row, scale=scale).items():
+        for field, crop in text_field_crops(
+            row, scale=scale, profile=layout_profile
+        ).items():
             fields[f"{row.index:03d}_{field}"] = crop
     observations = ocr_adapter.recognize_many(fields)
     ocr_finished = time.perf_counter()
@@ -114,8 +124,8 @@ def scan_barter_frame(
         to_item = match_dictionary(to_raw, dictionary.items, kind="item")
         remaining_observation = observations[prefix + "remaining_count"]
         remaining_count = _parse_remaining_count(remaining_observation)
-        req_amount = read_amount(row, "req_amount")
-        yield_amount = read_amount(row, "yield_amount")
+        req_amount = read_amount(row, "req_amount", profile=layout_profile)
+        yield_amount = read_amount(row, "yield_amount", profile=layout_profile)
 
         field_status = {
             "island": island.auto_confirmed,
@@ -166,6 +176,7 @@ def scan_barter_frame(
     return {
         "engine": "Windows.Media.Ocr/OcrEngine (ko)",
         "preprocessing": f"fixed field crop + {scale}x bicubic upscale",
+        "layout_profile": layout_profile.name,
         "source_image": source_label,
         "manual_region": (
             [region.x, region.y, region.width, region.height] if region else None

@@ -86,9 +86,13 @@ def build_parser() -> argparse.ArgumentParser:
     scan_scroll.add_argument("--calibration", type=Path)
     scan_scroll.add_argument("--scale", type=int, default=4)
     scan_scroll.add_argument("--idle-timeout", type=float, default=12.0)
-    scan_scroll.add_argument("--poll-interval", type=float, default=0.25)
-    scan_scroll.add_argument("--debounce", type=float, default=0.2)
-    scan_scroll.add_argument("--change-threshold", type=float, default=0.02)
+    scan_scroll.add_argument("--poll-interval", type=float, default=0.1)
+    scan_scroll.add_argument("--stable-frames", type=int, default=8)
+    scan_scroll.add_argument("--stable-duration", type=float, default=0.7)
+    scan_scroll.add_argument("--motion-threshold", type=float, default=0.02)
+    scan_scroll.add_argument("--duplicate-threshold", type=float, default=0.005)
+    scan_scroll.add_argument("--debounce", type=float, help=argparse.SUPPRESS)
+    scan_scroll.add_argument("--change-threshold", type=float, help=argparse.SUPPRESS)
     scan_scroll.add_argument("--countdown", type=int, default=3)
     scan_scroll.add_argument(
         "--debug",
@@ -173,6 +177,10 @@ def main(argv: list[str] | None = None) -> int:
                 config=ScrollScanConfig(
                     idle_timeout=args.idle_timeout,
                     poll_interval=args.poll_interval,
+                    stable_frames=args.stable_frames,
+                    stable_duration=args.stable_duration,
+                    motion_threshold=args.motion_threshold,
+                    duplicate_threshold=args.duplicate_threshold,
                     debounce=args.debounce,
                     change_threshold=args.change_threshold,
                 ),
@@ -197,8 +205,11 @@ def main(argv: list[str] | None = None) -> int:
             "scan-scroll complete: "
             f"rows={session['unique_rows']}, "
             f"review_required={session['review_required_rows']}, "
+            f"accepted_viewports={session['accepted_viewports']}, "
             f"ocr_viewports={session['ocr_frames']}, "
+            f"rejected_viewports={session['rejected_viewports']}, "
             f"duplicate_skips={session['duplicate_viewports_skipped']}, "
+            f"coverage_complete={result['coverage']['coverage_complete']}, "
             f"duration={session['duration_sec']}s, "
             f"avg_ocr={session['average_ocr_seconds']}s",
             file=sys.stderr,

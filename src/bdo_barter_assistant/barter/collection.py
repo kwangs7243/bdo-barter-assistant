@@ -3,9 +3,18 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
+from PIL import Image
+
 
 PRIMARY_FIELDS = ("island", "from_item", "to_item")
 NUMERIC_FIELDS = ("remaining_count", "req_amount", "yield_amount")
+_DETACHED_ROW_WIDTH = 1023
+_DETACHED_ROW_HEIGHT = 70
+_VISUAL_IDENTITY_BOXES = (
+    (70, 0, 240, 34),
+    (340, 0, 660, 38),
+    (710, 0, 1010, 42),
+)
 
 
 def _confirmed_value(row: dict[str, Any], field: str) -> object | None:
@@ -78,10 +87,14 @@ def _field_rank(payload: object) -> tuple[int, int, float]:
     )
 
 
-def merge_row_observations(
-    existing: dict[str, Any], incoming: dict[str, Any], viewport_index: int
+def _merge_row_observations(
+    existing: dict[str, Any],
+    incoming: dict[str, Any],
+    viewport_index: int,
+    *,
+    require_ocr_identity: bool,
 ) -> dict[str, Any]:
-    if not rows_likely_same(existing, incoming):
+    if require_ocr_identity and not rows_likely_same(existing, incoming):
         raise ValueError("cannot merge rows without sufficient matching evidence")
 
     merged = deepcopy(
@@ -143,6 +156,64 @@ def merge_row_observations(
     return merged
 
 
+def merge_row_observations(
+    existing: dict[str, Any], incoming: dict[str, Any], viewport_index: int
+) -> dict[str, Any]:
+    return _merge_row_observations(
+        existing,
+        incoming,
+        viewport_index,
+        require_ocr_identity=True,
+    )
+
+
+def row_visual_fingerprint(image: Image.Image) -> tuple[int, ...]:
+    """Hash the three row identity columns without using OCR text."""
+    width_scale = image.width / _DETACHED_ROW_WIDTH
+    height_scale = image.height / _DETACHED_ROW_HEIGHT
+    bits: list[int] = []
+    for left, top, right, bottom in _VISUAL_IDENTITY_BOXES:
+        crop = image.crop(
+            (
+                round(left * width_scale),
+                round(top * height_scale),
+                round(right * width_scale),
+                round(bottom * height_scale),
+            )
+        )
+        sample = crop.convert("L").resize((65, 12), Image.Resampling.BILINEAR)
+        bits.extend(
+            int(sample.getpixel((x, y)) > sample.getpixel((x + 1, y)))
+            for y in range(sample.height)
+            for x in range(sample.width - 1)
+        )
+    return tuple(bits)
+
+
+def visual_fingerprint_difference(
+    left: tuple[int, ...], right: tuple[int, ...]
+) -> float:
+    if len(left) != len(right) or not left:
+        raise ValueError("row visual fingerprints must have the same non-zero length")
+    return sum(a != b for a, b in zip(left, right)) / len(left)
+
+
+def visual_overlap_length(
+    collected: list[tuple[int, ...]],
+    incoming: list[tuple[int, ...]],
+    *,
+    threshold: float = 0.02,
+) -> int:
+    """Find a conservative suffix/prefix overlap from segmented row pixels."""
+    for length in range(min(len(collected), len(incoming)), 0, -1):
+        if all(
+            visual_fingerprint_difference(left, right) <= threshold
+            for left, right in zip(collected[-length:], incoming[:length])
+        ):
+            return length
+    return 0
+
+
 def overlap_length(
     collected: list[dict[str, Any]], incoming: list[dict[str, Any]]
 ) -> int:
@@ -173,6 +244,37 @@ def merge_viewport_rows(
         for offset in range(overlap):
             merged[start + offset] = merge_row_observations(
                 merged[start + offset], incoming[offset], viewport_index
+            )
+    merged.extend(
+        prepare_observed_row(row, viewport_index) for row in incoming[overlap:]
+    )
+    return merged
+
+
+def merge_viewport_rows_by_visual_overlap(
+    collected: list[dict[str, Any]],
+    incoming: list[dict[str, Any]],
+    *,
+    viewport_index: int,
+    overlap: int,
+) -> list[dict[str, Any]]:
+    """Merge rows whose identity was already proven from row-image overlap."""
+    if overlap < 0 or overlap > min(len(collected), len(incoming)):
+        raise ValueError("visual overlap is outside the available row range")
+    if not collected:
+        if overlap:
+            raise ValueError("the first viewport cannot have an overlap")
+        return [prepare_observed_row(row, viewport_index) for row in incoming]
+
+    merged = deepcopy(collected)
+    if overlap:
+        start = len(merged) - overlap
+        for offset in range(overlap):
+            merged[start + offset] = _merge_row_observations(
+                merged[start + offset],
+                incoming[offset],
+                viewport_index,
+                require_ocr_identity=False,
             )
     merged.extend(
         prepare_observed_row(row, viewport_index) for row in incoming[overlap:]

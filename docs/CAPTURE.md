@@ -26,6 +26,18 @@ M2 구현, 자동 테스트와 실제 검은사막 창 검증을 완료했다. �
 - 캡처 프레임에서 client-relative ROI를 잘라 기존 M1 OCR 함수에 전달한다.
 - 기본 실행은 이미지를 저장하지 않는다. `--debug-capture`를 지정한 경우만 원본 client 캡처를 저장한다.
 
+## M3 detached barter window
+
+M3 `scan-scroll`은 `Panel_Window_Barter_Search` 제목과 `BlackDesert64.exe` 프로세스를 가진 별도 top-level HWND만 선택한다. 이 창이 없으면 메인 게임창으로 fallback하지 않고 즉시 오류로 종료한다. 이는 detached 전용 scrollbar/coverage 판정을 메인창 ROI에 잘못 적용하는 것을 막는다.
+
+실제 제공 캡처는 detached client `1023×713`, DPI `96`이었다. 첫 client frame에서 complete row를 찾은 뒤 첫 행 위 separator부터 client 하단까지 전체 가시 목록 영역을 bootstrap한다. 제공 캡처의 측정 결과는 `(0,220,1023,493)`이다. 고정 451px 높이나 정확히 6행이라는 가정은 사용하지 않으며, 이후 poll은 이 client-relative 영역만 `capture_client_region()`으로 ImageGrab한다. 다른 UI 배율이나 레이아웃에서 자동 측정이 실패하면 `--region`으로 명시할 수 있다.
+
+detached capture는 M2의 메인창 기본 ROI `(464,404,987,490)`를 재사용하지 않는다. 일반 실행은 이미지를 저장하지 않으며, M3 `--debug`에서 accepted viewport만 저장한다.
+
+`scan-scroll`은 detached ROI를 기존 M1 파이프라인에 넘길 때만 `detached_barter_1023x713` OCR layout profile을 선택한다. M1 reference 이미지의 고정 필드 박스와 매칭 임계값은 변경하지 않는다. 실제 detached 샘플에서 측정한 row-local 필드 박스와 보수적인 수량 glyph 규칙은 `docs/SCROLL_COLLECTION.md`에 기록되어 있다.
+
+최종 live 검증은 detached HWND의 11개 viewport를 top부터 bottom까지 연결해 56행과 `coverage_complete=true`를 출력하고 `bottom_reached`로 자동 종료했다. overlap 0 화면은 거부 후 복구됐으며 메인 게임창 fallback은 허용하지 않는다. 의미 필드 미확정은 `review_required`로 남기며 capture coverage와 별도로 취급한다.
+
 `window_rect`는 테두리와 제목 표시줄을 포함한 화면 좌표이고, `client_rect_screen`은 그 요소를 제외한 실제 게임 표시 영역의 화면 좌표다. ROI는 캡처된 client 이미지의 좌상단을 `(0, 0)`으로 사용한다.
 
 ## 실행
